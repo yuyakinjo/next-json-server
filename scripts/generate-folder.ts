@@ -1,4 +1,10 @@
-import { existsSync, mkdirSync, readFileSync, writeFileSync } from "node:fs";
+import {
+  existsSync,
+  mkdirSync,
+  readFileSync,
+  rmSync,
+  writeFileSync,
+} from "node:fs";
 import { join } from "node:path";
 import { generateInterface } from "./generate-interface";
 
@@ -7,13 +13,16 @@ const dbPath = join(__dirname, "../db.json");
 // Path to the app folder
 const appFolderPath = join(__dirname, "../app/json");
 
-// Read and parse db.json
-const dbData = JSON.parse(readFileSync(dbPath, "utf-8"));
+// Delete the app folder if it exists
+if (existsSync(appFolderPath)) {
+  rmSync(appFolderPath, { recursive: true, force: true });
+}
 
 // Ensure the app folder exists
-if (!existsSync(appFolderPath)) {
-  mkdirSync(appFolderPath);
-}
+mkdirSync(appFolderPath);
+
+// Read and parse db.json
+const dbData = JSON.parse(readFileSync(dbPath, "utf-8"));
 
 // Create folders and route.ts files based on the first-level keys of db.json
 for (const key of Object.keys(dbData)) {
@@ -77,7 +86,7 @@ export async function DELETE(req: NextRequest) {
   writeFileSync(dbPath, JSON.stringify(dbData, null, 2));
   return NextResponse.json(null, { status: 204 });
 }
-      `;
+`;
     }
 
     writeFileSync(routeFilePath, routeContent.trim());
