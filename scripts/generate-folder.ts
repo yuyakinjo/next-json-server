@@ -38,7 +38,11 @@ for (const key of Object.keys(dbData)) {
       ? dbData[key][0]
       : dbData[key];
     const interfaceContent = generateInterface(key, exampleItem);
-    const routeContent = generateRouteContent(key, interfaceContent, dbPath);
+    const routeContent = generateRouteContent(
+      key,
+      interfaceContent,
+      Array.isArray(dbData[key]),
+    );
 
     writeFileSync(routeFilePath, routeContent);
   }

@@ -3,9 +3,8 @@ import { readFileSync } from "node:fs";
 export const generateRouteContent = (
   key: string,
   interfaceContent: string,
-  dbPath: string,
+  dataIsArray: boolean,
 ) => {
-  const dbData = JSON.parse(readFileSync(dbPath, "utf-8"));
   let routeContent = `
 import { readFileSync, writeFileSync } from 'node:fs';
 import { join } from 'node:path';
@@ -23,7 +22,7 @@ export async function GET(req: NextRequest) {
 }
 `;
 
-  if (Array.isArray(dbData[key])) {
+  if (dataIsArray) {
     routeContent += `
 export async function POST(req: NextRequest) {
   const resource = '${key}';
