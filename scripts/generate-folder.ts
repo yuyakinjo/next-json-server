@@ -4,7 +4,7 @@ import { join } from "node:path";
 // Path to the db.json file
 const dbPath = join(__dirname, "../db.json");
 // Path to the app folder
-const appFolderPath = join(__dirname, "../app");
+const appFolderPath = join(__dirname, "../app/json");
 
 // Read and parse db.json
 const dbData = JSON.parse(readFileSync(dbPath, "utf-8"));
@@ -17,11 +17,11 @@ if (!existsSync(appFolderPath)) {
 // Create folders based on the first-level keys of db.json
 for (const key of Object.keys(dbData)) {
   const folderPath = join(appFolderPath, key);
-  if (!existsSync(folderPath)) {
+  if (existsSync(folderPath)) {
+    console.log(`Folder already exists: ${folderPath}`);
+  } else {
     mkdirSync(folderPath);
     console.log(`Created folder: ${folderPath}`);
-  } else {
-    console.log(`Folder already exists: ${folderPath}`);
   }
 }
 
