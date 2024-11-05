@@ -42,6 +42,7 @@ for (const key of Object.keys(dbData)) {
 import { readFileSync, writeFileSync } from 'node:fs';
 import { join } from 'node:path';
 import { type NextRequest, NextResponse } from "next/server";
+import { randomUUID } from "node:crypto";
 
 ${interfaceContent}
 
@@ -59,6 +60,9 @@ export async function GET(req: NextRequest) {
 export async function POST(req: NextRequest) {
   const resource = '${key}';
   const newItem: ${key.charAt(0).toUpperCase() + key.slice(1)} = await req.json();
+  if (!newItem.id) {
+    newItem.id = randomUUID();
+  }
   dbData[resource].push(newItem);
   writeFileSync(dbPath, JSON.stringify(dbData, null, 2));
   return NextResponse.json(newItem, { status: 201 });
