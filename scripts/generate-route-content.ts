@@ -64,7 +64,7 @@ export async function DELETE(req: NextRequest) {
   writeFileSync(dbPath, JSON.stringify(dbData, null, 2));
   return NextResponse.json(null, { status: 204 });
 }
-    `;
+`;
   }
 
   return routeContent.trimStart();

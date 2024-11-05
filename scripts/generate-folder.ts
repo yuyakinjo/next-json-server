@@ -34,14 +34,13 @@ for (const key of Object.keys(dbData)) {
 
   const routeFilePath = join(folderPath, "route.ts");
   if (!existsSync(routeFilePath)) {
-    const exampleItem = Array.isArray(dbData[key])
-      ? dbData[key][0]
-      : dbData[key];
+    const itemIsArray = Array.isArray(dbData[key]);
+    const exampleItem = itemIsArray ? dbData[key][0] : dbData[key];
     const interfaceContent = generateInterface(key, exampleItem);
     const routeContent = generateRouteContent(
       key,
       interfaceContent,
-      Array.isArray(dbData[key]),
+      itemIsArray,
     );
 
     writeFileSync(routeFilePath, routeContent);
