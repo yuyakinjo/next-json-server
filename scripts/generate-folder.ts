@@ -43,7 +43,7 @@ export async function GET(req: NextRequest) {
   const resource = '${key}';
   return NextResponse.json(dbData[resource]);
 }
-    `;
+`;
 
     if (Array.isArray(dbData[key])) {
       routeContent += `
