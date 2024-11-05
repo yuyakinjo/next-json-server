@@ -89,7 +89,7 @@ export async function DELETE(req: NextRequest) {
 `;
     }
 
-    writeFileSync(routeFilePath, routeContent.trim());
+    writeFileSync(routeFilePath, routeContent.trimStart());
   }
 }
 
