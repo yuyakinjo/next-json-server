@@ -1,5 +1,6 @@
 import { existsSync, mkdirSync, readFileSync, writeFileSync } from "node:fs";
 import { join } from "node:path";
+import { generateInterface } from "./generate-interface";
 
 // Path to the db.json file
 const dbPath = join(__dirname, "../db.json");
@@ -13,17 +14,6 @@ const dbData = JSON.parse(readFileSync(dbPath, "utf-8"));
 if (!existsSync(appFolderPath)) {
   mkdirSync(appFolderPath);
 }
-
-// Generate TypeScript interfaces
-const generateInterface = (key: string, example: Record<string, string>) => {
-  const fields = Object.keys(example)
-    .map((field) => {
-      const type = typeof example[field];
-      return `  ${field}: ${type};`;
-    })
-    .join("\n");
-  return `export interface ${key.charAt(0).toUpperCase() + key.slice(1)} {\n${fields}\n}`;
-};
 
 // Create folders and route.ts files based on the first-level keys of db.json
 for (const key of Object.keys(dbData)) {
