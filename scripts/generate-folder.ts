@@ -29,7 +29,7 @@ for (const key of Object.keys(dbData)) {
       : dbData[key];
     const interfaceContent = generateInterface(key, exampleItem);
 
-    const routeContent = `
+    let routeContent = `
 import { readFileSync, writeFileSync } from 'node:fs';
 import { join } from 'node:path';
 import { type NextRequest, NextResponse } from "next/server";
@@ -40,16 +40,13 @@ const dbPath = join(process.cwd(), 'db.json');
 const dbData = JSON.parse(readFileSync(dbPath, 'utf-8'));
 
 export async function GET(req: NextRequest) {
-  const { searchParams } = new URL(req.url);
-  const id = searchParams.get('id');
   const resource = '${key}';
-
-  if (!id) return NextResponse.json(dbData[resource]);
-
-  const item = dbData[resource].find((item: ${key.charAt(0).toUpperCase() + key.slice(1)}) => item.id === id);
-  return NextResponse.json(item);
+  return NextResponse.json(dbData[resource]);
 }
+    `;
 
+    if (Array.isArray(dbData[key])) {
+      routeContent += `
 export async function POST(req: NextRequest) {
   const resource = '${key}';
   const newItem: ${key.charAt(0).toUpperCase() + key.slice(1)} = await req.json();
@@ -80,7 +77,9 @@ export async function DELETE(req: NextRequest) {
   writeFileSync(dbPath, JSON.stringify(dbData, null, 2));
   return NextResponse.json(null, { status: 204 });
 }
-    `;
+      `;
+    }
+
     writeFileSync(routeFilePath, routeContent.trim());
   }
 }
