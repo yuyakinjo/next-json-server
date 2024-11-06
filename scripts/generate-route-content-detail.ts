@@ -57,7 +57,7 @@ export async function DELETE(req: NextRequest) {
   const resource = '${key}';
   dbData[resource] = dbData[resource].filter((item: ${key.charAt(0).toUpperCase() + key.slice(1)}) => item.id !== id);
   writeFileSync(dbPath, JSON.stringify(dbData, null, 2));
-  return NextResponse.json(null, { status: 204 });
+  return new NextResponse(null, { status: 204 });
 }
 `.trimStart();
 };
