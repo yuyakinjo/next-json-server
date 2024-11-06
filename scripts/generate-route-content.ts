@@ -1,7 +1,9 @@
+import type { RelationKeys } from "@/scripts/generate-folder";
+
 export const generateRouteContentArray = (
   key: string,
   interfaceContent: string,
-  relationKeys: string[],
+  relationKeys: RelationKeys,
 ) => {
   const typeName = key.charAt(0).toUpperCase() + key.slice(1);
   return `
@@ -62,9 +64,10 @@ export async function GET(req: NextRequest) {
   const data = dbData[resource];
   const filtered = applyFilters(data, searchParams);
   const sorted = applySort(filtered, sort);
+  const joined = applyJoin(sorted, ${JSON.stringify(relationKeys)});
   const start = (page - 1) * limit;
   const end = start + limit;
-  const paginatedData = sorted.slice(start, end);
+  const paginatedData = joined.slice(start, end);
   return NextResponse.json(paginatedData, { headers: { 'X-Total-Count': filtered.length.toString() } });
 }
 
