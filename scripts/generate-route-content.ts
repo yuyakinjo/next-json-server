@@ -15,9 +15,15 @@ const dbPath = join(process.cwd(), 'db.json');
 const dbData = JSON.parse(readFileSync(dbPath, 'utf-8'));
 
 export async function GET(req: NextRequest) {
+  const { searchParams } = new URL(req.url);
+  const page = Number(searchParams.get('page') || '1');
+  const limit = Number(searchParams.get('limit') || '10');
   const resource = '${key}';
   const data = dbData[resource];
-  return NextResponse.json(data, { headers: { 'X-Total-Count': data.length.toString() } });
+  const start = (page - 1) * limit;
+  const end = start + limit;
+  const paginatedData = data.slice(start, end);
+  return NextResponse.json(paginatedData, { headers: { 'X-Total-Count': data.length.toString() } });
 }
 
 export async function POST(req: NextRequest) {
