@@ -38,16 +38,32 @@ const applyFilters = <T>(data: T[], searchParams: URLSearchParams): T[] => {
   });
 };
 
+const applySort = <T>(data: T[], sortParams: string | null): T[] => {
+  if (!sortParams) return data;
+  const sortFields = sortParams.split(",");
+  return data.sort((a, b) => {
+    for (const field of sortFields) {
+      const direction = field.startsWith("-") ? -1 : 1;
+      const fieldName = field.startsWith("-") ? field.slice(1) : field;
+      if (a[fieldName as keyof T] < b[fieldName as keyof T]) return -1 * direction;
+      if (a[fieldName as keyof T] > b[fieldName as keyof T]) return 1 * direction;
+    }
+    return 0;
+  });
+};
+
 export async function GET(req: NextRequest) {
   const { searchParams } = new URL(req.url);
   const page = Number(searchParams.get('page') || '1');
   const limit = Number(searchParams.get('limit') || '10');
+  const sort = searchParams.get('sort');
   const resource = '${key}';
   const data = dbData[resource];
   const filtered = applyFilters(data, searchParams);
+  const sorted = applySort(filtered, sort);
   const start = (page - 1) * limit;
   const end = start + limit;
-  const paginatedData = filtered.slice(start, end);
+  const paginatedData = sorted.slice(start, end);
   return NextResponse.json(paginatedData, { headers: { 'X-Total-Count': filtered.length.toString() } });
 }
 
