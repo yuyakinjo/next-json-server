@@ -23,19 +23,9 @@ export async function GET(req: NextRequest) {
 export async function POST(req: NextRequest) {
   const resource = '${key}';
   const newItem: ${typeName} = await req.json();
-  const index = dbData[resource].findIndex((item: ${typeName}) => item.id === newItem.id);
-
-  if (index !== -1) {
-    dbData[resource][index] = { ...dbData[resource][index], ...newItem };
-  } else {
-    if (!newItem.id) {
-      newItem.id = randomUUID();
-    }
-    dbData[resource].push(newItem);
-  }
-
+  dbData[resource].push(newItem);
   writeFileSync(dbPath, JSON.stringify(dbData, null, 2));
-  return NextResponse.json(newItem, { status: index !== -1 ? 200 : 201 });
+  return NextResponse.json(newItem, { status: 201 });
 }
 
 export async function PUT(req: NextRequest) {
