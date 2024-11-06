@@ -6,12 +6,12 @@ import {
   writeFileSync,
 } from "node:fs";
 import { join } from "node:path";
+import { generateInterface } from "@/scripts/generate-interface";
 import {
   generateRouteContentArray,
-  generateRouteContentDetail,
   generateRouteContentNonArray,
 } from "@/scripts/generate-route-content";
-import { generateInterface } from "./generate-interface";
+import { generateRouteContentDetail } from "@/scripts/generate-route-content-detail";
 
 // Path to the db.json file
 const dbPath = join(__dirname, "../db.json");
