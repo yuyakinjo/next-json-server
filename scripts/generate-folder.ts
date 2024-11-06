@@ -29,19 +29,6 @@ mkdirSync(appFolderPath);
 // Read and parse db.json
 const dbData = JSON.parse(readFileSync(dbPath, "utf-8"));
 
-// Function to detect relation keys
-const detectRelationKeys = (propName: string, exampleItem: object) => {
-  const relationKeys = Object.keys(exampleItem)
-    .filter((key) => key.endsWith("Id"))
-    .map((key) => ({
-      key,
-      parentName: propName,
-      childName: key.replace("Id", ""),
-    }));
-  return relationKeys;
-};
-export type RelationKeys = ReturnType<typeof detectRelationKeys>;
-
 // Create folders and route.ts files based on the first-level keys of db.json
 for (const key of Object.keys(dbData)) {
   const folderPath = join(appFolderPath, key);
@@ -54,9 +41,8 @@ for (const key of Object.keys(dbData)) {
     const itemIsArray = Array.isArray(dbData[key]);
     const exampleItem = itemIsArray ? dbData[key][0] : dbData[key];
     const interfaceContent = generateInterface(key, exampleItem);
-    const relationKeys = detectRelationKeys(key, exampleItem); // Detect relation keys. ex. postsId
     const routeContent = itemIsArray
-      ? generateRouteContentArray(key, interfaceContent, relationKeys)
+      ? generateRouteContentArray(key, interfaceContent)
       : generateRouteContentNonArray(key, interfaceContent);
 
     writeFileSync(routeFilePath, routeContent);

@@ -1,16 +1,12 @@
-import type { RelationKeys } from "@/scripts/generate-folder";
-
 export const generateRouteContentArray = (
   key: string,
   interfaceContent: string,
-  relationKeys: RelationKeys,
 ) => {
   const typeName = key.charAt(0).toUpperCase() + key.slice(1);
   return `
 import { randomUUID } from "node:crypto";
 import { readFileSync, writeFileSync } from "node:fs";
 import { join } from "node:path";
-import type { RelationKeys } from "@/scripts/generate-folder";
 import { type NextRequest, NextResponse } from "next/server";
 
 ${interfaceContent}
@@ -65,10 +61,9 @@ export async function GET(req: NextRequest) {
   const data = dbData[resource];
   const filtered = applyFilters(data, searchParams);
   const sorted = applySort(filtered, sort);
-  const joined = applyJoin(sorted, dbData, ${JSON.stringify(relationKeys)});
   const start = (page - 1) * limit;
   const end = start + limit;
-  const paginatedData = joined.slice(start, end);
+  const paginatedData = sorted.slice(start, end);
   return NextResponse.json(paginatedData, { headers: { 'X-Total-Count': filtered.length.toString() } });
 }
 
