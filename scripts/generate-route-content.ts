@@ -14,16 +14,41 @@ ${interfaceContent}
 const dbPath = join(process.cwd(), 'db.json');
 const dbData = JSON.parse(readFileSync(dbPath, 'utf-8'));
 
+const operators = {
+  lt: (a: number, b: number) => a < b,
+  lte: (a: number, b: number) => a <= b,
+  gt: (a: number, b: number) => a > b,
+  gte: (a: number, b: number) => a >= b,
+  ne: (a: number, b: number) => a !== b,
+  eq: (a: number, b: number) => a === b,
+};
+
+const applyFilters = <T>(data: T[], searchParams: URLSearchParams): T[] => {
+  return data.filter((item) => {
+    for (const [key, value] of searchParams.entries()) {
+      const [field, operator] = key.split("_");
+      const itemValue = item[field as keyof T];
+      if (!(operator in operators)) return true;
+      return operators[operator as keyof typeof operators](
+        Number(itemValue),
+        Number(value),
+      );
+    }
+    return true;
+  });
+};
+
 export async function GET(req: NextRequest) {
   const { searchParams } = new URL(req.url);
   const page = Number(searchParams.get('page') || '1');
   const limit = Number(searchParams.get('limit') || '10');
   const resource = '${key}';
   const data = dbData[resource];
+  const filtered = applyFilters(data, searchParams);
   const start = (page - 1) * limit;
   const end = start + limit;
-  const paginatedData = data.slice(start, end);
-  return NextResponse.json(paginatedData, { headers: { 'X-Total-Count': data.length.toString() } });
+  const paginatedData = filtered.slice(start, end);
+  return NextResponse.json(paginatedData, { headers: { 'X-Total-Count': filtered.length.toString() } });
 }
 
 export async function POST(req: NextRequest) {
