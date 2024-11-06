@@ -7,6 +7,7 @@ export const generateRouteContentArray = (
 import { randomUUID } from "node:crypto";
 import { readFileSync, writeFileSync } from "node:fs";
 import { join } from "node:path";
+import type DBJson from "@/db.json";
 import { type NextRequest, NextResponse } from "next/server";
 
 ${interfaceContent}
@@ -23,7 +24,10 @@ const operators = {
   eq: (a: number, b: number) => a === b,
 };
 
-const applyFilters = <T>(data: T[], searchParams: URLSearchParams): T[] => {
+const applyFilters = <T extends { id: string }>(
+  data: T[],
+  searchParams: URLSearchParams,
+): T[] => {
   return data.filter((item) => {
     for (const [key, value] of searchParams.entries()) {
       const [field, operator] = key.split("_");
@@ -52,6 +56,21 @@ const applySort = <T>(data: T[], sortParams: string | null): T[] => {
   });
 };
 
+const applyInnerJoin = <T extends { id: string }>(
+  data: T[],
+  dbData: Record<string, { [key: string]: unknown }[]>,
+  relationKey: string,
+  relatedResource: string,
+): T[] => {
+  return data.map((item) => {
+    const children = dbData[relatedResource].filter(
+      (relatedItem: { [key: string]: unknown }) =>
+        relatedItem[relationKey] === item.id,
+    );
+    return {...item, [relatedResource]: children};
+  });
+};
+
 export async function GET(req: NextRequest) {
   const { searchParams } = new URL(req.url);
   const page = Number(searchParams.get('page') || '1');
@@ -60,7 +79,8 @@ export async function GET(req: NextRequest) {
   const resource = '${key}';
   const data = dbData[resource];
   const filtered = applyFilters(data, searchParams);
-  const sorted = applySort(filtered, sort);
+  const joined = applyInnerJoin(filtered, dbData, '${key}Id', 'comments');
+  const sorted = applySort(joined, sort);
   const start = (page - 1) * limit;
   const end = start + limit;
   const paginatedData = sorted.slice(start, end);
