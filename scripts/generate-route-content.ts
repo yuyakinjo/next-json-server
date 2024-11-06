@@ -1,5 +1,3 @@
-import { readFileSync } from "node:fs";
-
 export const generateRouteContent = (
   key: string,
   interfaceContent: string,
