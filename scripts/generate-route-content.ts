@@ -1,9 +1,8 @@
-export const generateRouteContent = (
+export const generateRouteContentArray = (
   key: string,
   interfaceContent: string,
-  dataIsArray: boolean,
 ) => {
-  let routeContent = `
+  return `
 import { readFileSync, writeFileSync } from 'node:fs';
 import { join } from 'node:path';
 import { type NextRequest, NextResponse } from "next/server";
@@ -18,10 +17,7 @@ export async function GET(req: NextRequest) {
   const resource = '${key}';
   return NextResponse.json(dbData[resource]);
 }
-`;
 
-  if (dataIsArray) {
-    routeContent += `
 export async function POST(req: NextRequest) {
   const resource = '${key}';
   const newItem: ${key.charAt(0).toUpperCase() + key.slice(1)} = await req.json();
@@ -62,8 +58,26 @@ export async function DELETE(req: NextRequest) {
   writeFileSync(dbPath, JSON.stringify(dbData, null, 2));
   return NextResponse.json(null, { status: 204 });
 }
-`;
-  }
+`.trimStart();
+};
 
-  return routeContent.trimStart();
+export const generateRouteContentNonArray = (
+  key: string,
+  interfaceContent: string,
+) => {
+  return `
+import { readFileSync } from 'node:fs';
+import { join } from 'node:path';
+import { type NextRequest, NextResponse } from "next/server";
+
+${interfaceContent}
+
+const dbPath = join(process.cwd(), 'db.json');
+const dbData = JSON.parse(readFileSync(dbPath, 'utf-8'));
+
+export async function GET(req: NextRequest) {
+  const resource = '${key}';
+  return NextResponse.json(dbData[resource]);
+}
+`.trimStart();
 };

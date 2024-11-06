@@ -6,8 +6,11 @@ import {
   writeFileSync,
 } from "node:fs";
 import { join } from "node:path";
+import {
+  generateRouteContentArray,
+  generateRouteContentNonArray,
+} from "@/scripts/generate-route-content";
 import { generateInterface } from "./generate-interface";
-import { generateRouteContent } from "./generate-route-content";
 
 // Path to the db.json file
 const dbPath = join(__dirname, "../db.json");
@@ -37,11 +40,9 @@ for (const key of Object.keys(dbData)) {
     const itemIsArray = Array.isArray(dbData[key]);
     const exampleItem = itemIsArray ? dbData[key][0] : dbData[key];
     const interfaceContent = generateInterface(key, exampleItem);
-    const routeContent = generateRouteContent(
-      key,
-      interfaceContent,
-      itemIsArray,
-    );
+    const routeContent = itemIsArray
+      ? generateRouteContentArray(key, interfaceContent)
+      : generateRouteContentNonArray(key, interfaceContent);
 
     writeFileSync(routeFilePath, routeContent);
   }
