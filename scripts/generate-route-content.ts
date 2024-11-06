@@ -15,7 +15,8 @@ const dbData = JSON.parse(readFileSync(dbPath, 'utf-8'));
 
 export async function GET(req: NextRequest) {
   const resource = '${key}';
-  return NextResponse.json(dbData[resource]);
+  const data = dbData[resource];
+  return NextResponse.json(data, { headers: { 'X-Total-Count': data.length.toString() } });
 }
 
 export async function POST(req: NextRequest) {
@@ -77,6 +78,9 @@ const dbData = JSON.parse(readFileSync(dbPath, 'utf-8'));
 
 export async function GET(req: NextRequest) {
   const resource = '${key}';
+  const data = dbData[resource];
+  return NextResponse.json(data, { headers: { 'X-Total-Count': data ? '1' : '0' } });
+}
   return NextResponse.json(dbData[resource]);
 }
 `.trimStart();
