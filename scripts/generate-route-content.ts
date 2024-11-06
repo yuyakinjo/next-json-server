@@ -1,6 +1,7 @@
 export const generateRouteContentArray = (
   key: string,
   interfaceContent: string,
+  relationKeys: string[],
 ) => {
   const typeName = key.charAt(0).toUpperCase() + key.slice(1);
   return `
