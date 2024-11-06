@@ -22,7 +22,8 @@ export async function GET(req: NextRequest) {
 
 export async function POST(req: NextRequest) {
   const resource = '${key}';
-  const newItem: ${typeName} = await req.json();
+  const reqBody: ${typeName} = await req.json();
+  const newItem = { ...reqBody, id: randomUUID() };
   dbData[resource].push(newItem);
   writeFileSync(dbPath, JSON.stringify(dbData, null, 2));
   return NextResponse.json(newItem, { status: 201 });
