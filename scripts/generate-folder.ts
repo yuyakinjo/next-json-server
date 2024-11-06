@@ -8,6 +8,7 @@ import {
 import { join } from "node:path";
 import {
   generateRouteContentArray,
+  generateRouteContentDetail,
   generateRouteContentNonArray,
 } from "@/scripts/generate-route-content";
 import { generateInterface } from "./generate-interface";
@@ -45,6 +46,19 @@ for (const key of Object.keys(dbData)) {
       : generateRouteContentNonArray(key, interfaceContent);
 
     writeFileSync(routeFilePath, routeContent);
+
+    if (itemIsArray) {
+      const detailFolderPath = join(folderPath, "[id]");
+      if (!existsSync(detailFolderPath)) {
+        mkdirSync(detailFolderPath);
+      }
+      const detailRouteFilePath = join(detailFolderPath, "route.ts");
+      const detailRouteContent = generateRouteContentDetail(
+        key,
+        interfaceContent,
+      );
+      writeFileSync(detailRouteFilePath, detailRouteContent);
+    }
   }
 }
 
