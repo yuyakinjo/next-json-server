@@ -7,7 +7,7 @@
     "build": "next build",
     "start": "next start",
     "lint": "next lint",
-    "gen:schema": "bun scripts/generate-folder.ts"
+    "gen:json:route": "bun scripts/generate-folder.ts"
   },
   "dependencies": {
     "react": "19.0.0-rc-02c0e824-20241028",
