@@ -7,11 +7,32 @@ export const generateRouteContentDetail = (
 import { readFileSync, writeFileSync } from 'node:fs';
 import { basename, join } from "node:path";
 import { type NextRequest, NextResponse } from "next/server";
+import { generateRelationMap } from "@/scripts/generate-relation-map";
 
 ${interfaceContent}
 
 const dbPath = join(process.cwd(), 'db.json');
 const dbData = JSON.parse(readFileSync(dbPath, 'utf-8'));
+const relationMap = generateRelationMap(dbData);
+
+const applyInnerJoin = <T extends { id: string }>(
+  item: T,
+  dbData: Record<string, { [key: string]: unknown }[]>,
+  resource: string,
+): T => {
+  const relations = relationMap[resource] || {};
+  const joined = Object.entries(relations).reduce(
+    (acc, [relatedResource, relationKey]) => {
+      const children = dbData[relatedResource].filter(
+        (relatedItem: { [key: string]: unknown }) =>
+          relatedItem[relationKey as string] === item.id,
+      );
+      return Object.assign(acc, { [relatedResource]: children });
+    },
+    item,
+  );
+  return joined;
+};
 
 export async function GET(req: NextRequest) {
   const { pathname } = new URL(req.url);
@@ -21,7 +42,8 @@ export async function GET(req: NextRequest) {
   if (!item) {
     return NextResponse.json({ message: "Not found" }, { status: 404 });
   }
-  return NextResponse.json(item);
+  const joinedItem = applyInnerJoin(item, dbData, resource);
+  return NextResponse.json(joinedItem);
 }
 
 export async function PUT(req: NextRequest) {
