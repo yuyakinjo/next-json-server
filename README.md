@@ -56,3 +56,5 @@ curl http://localhost:3000/json/posts
 - [ ] create test of every request and function
 - [ ] deliver the npm package
 - [ ] choice db.json name, put path in the command
+- [ ] set dependabot config
+- [ ] generate prisma schema from db.json
