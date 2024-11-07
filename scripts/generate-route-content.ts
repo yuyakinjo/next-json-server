@@ -9,11 +9,13 @@ import { readFileSync, writeFileSync } from "node:fs";
 import { join } from "node:path";
 import type DBJson from "@/db.json";
 import { type NextRequest, NextResponse } from "next/server";
+import { generateRelationMap } from "@/scripts/generate-relation-map";
 
 ${interfaceContent}
 
 const dbPath = join(process.cwd(), 'db.json');
 const dbData = JSON.parse(readFileSync(dbPath, 'utf-8'));
+const relationMap = generateRelationMap(dbData);
 
 const operators = {
   lt: (a: number, b: number) => a < b,
@@ -59,15 +61,21 @@ const applySort = <T>(data: T[], sortParams: string | null): T[] => {
 const applyInnerJoin = <T extends { id: string }>(
   data: T[],
   dbData: Record<string, { [key: string]: unknown }[]>,
-  relationKey: string,
-  relatedResource: string,
+  resource: string,
 ): T[] => {
+  const relations = relationMap[resource] || {};
   return data.map((item) => {
-    const children = dbData[relatedResource].filter(
-      (relatedItem: { [key: string]: unknown }) =>
-        relatedItem[relationKey] === item.id,
+    const joined = Object.entries(relations).reduce(
+      (acc, [relatedResource, relationKey]) => {
+        const children = dbData[relatedResource].filter(
+          (relatedItem: { [key: string]: unknown }) =>
+            relatedItem[relationKey as string] === item.id,
+        );
+        return Object.assign(acc, { [relatedResource]: children });
+      },
+      item,
     );
-    return {...item, [relatedResource]: children};
+    return joined;
   });
 };
 
@@ -79,7 +87,7 @@ export async function GET(req: NextRequest) {
   const resource = '${key}';
   const data = dbData[resource];
   const filtered = applyFilters(data, searchParams);
-  const joined = applyInnerJoin(filtered, dbData, '${key}Id', 'comments');
+  const joined = applyInnerJoin(filtered, dbData, resource);
   const sorted = applySort(joined, sort);
   const start = (page - 1) * limit;
   const end = start + limit;
