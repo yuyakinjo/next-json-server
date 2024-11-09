@@ -10,8 +10,8 @@
     "gen:json:route": "bun scripts/generate-folder.ts"
   },
   "dependencies": {
-    "react": "19.0.0-rc-02c0e824-20241028",
-    "react-dom": "19.0.0-rc-02c0e824-20241028",
+    "react": "19.0.0-rc.0",
+    "react-dom": "19.0.0-rc.0",
     "next": "15.0.2"
   },
   "devDependencies": {
