@@ -10,10 +10,11 @@ import { join } from "node:path";
 import type DBJson from "@/db.json";
 import { type NextRequest, NextResponse } from "next/server";
 import { generateRelationMap } from "@/scripts/generate-relation-map";
+import { DB_JSON_PATH } from "@/scripts/constants";
 
 ${interfaceContent}
 
-const dbPath = join(process.cwd(), 'db.json');
+const dbPath = DB_JSON_PATH;
 const dbData = JSON.parse(readFileSync(dbPath, 'utf-8'));
 const relationMap = generateRelationMap(dbData);
 
@@ -138,10 +139,11 @@ export const generateRouteContentNonArray = (
 import { readFileSync, writeFileSync } from 'node:fs';
 import { join } from 'node:path';
 import { type NextRequest, NextResponse } from "next/server";
+import { DB_JSON_PATH } from "@/scripts/constants";
 
 ${interfaceContent}
 
-const dbPath = join(process.cwd(), 'db.json');
+const dbPath = DB_JSON_PATH;
 const dbData = JSON.parse(readFileSync(dbPath, 'utf-8'));
 
 export async function GET(req: NextRequest) {
