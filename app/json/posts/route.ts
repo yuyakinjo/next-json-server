@@ -121,6 +121,10 @@ export async function DELETE(req: NextRequest) {
   const { searchParams } = new URL(req.url);
   const id = searchParams.get("id");
   const resource = "posts";
+
+  const index = dbData[resource].findIndex((item: Posts) => item.id === id);
+  if (index === -1) return NextResponse.json({ message: "Not found" }, { status: 404 });
+
   dbData[resource] = dbData[resource].filter((item: Posts) => item.id !== id);
   writeFileSync(dbPath, JSON.stringify(dbData, null, 2));
   return NextResponse.json(null, { status: 204 });

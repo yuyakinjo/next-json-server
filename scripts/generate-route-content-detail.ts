@@ -79,6 +79,10 @@ export async function DELETE(req: NextRequest) {
   const { pathname } = new URL(req.url);
   const id = basename(pathname);
   const resource = "${key}";
+
+  const index = dbData[resource].findIndex((item: ${typeName}) => item.id === id);
+  if (index === -1) return NextResponse.json({ message: "Not found" }, { status: 404 });
+
   dbData[resource] = dbData[resource].filter((item: ${typeName}) => item.id !== id);
   writeFileSync(dbPath, JSON.stringify(dbData, null, 2));
   return new NextResponse(null, { status: 204 });
