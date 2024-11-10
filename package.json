@@ -7,12 +7,13 @@
     "build": "next build",
     "start": "next start",
     "lint": "biome ci",
-    "gen:json:route": "bun scripts/generate-folder.ts"
+    "gen:json:route": "bun scripts/generate-folder.ts",
+    "test": "vitest"
   },
   "dependencies": {
+    "next": "15.0.3",
     "react": "19.0.0-rc.0",
-    "react-dom": "19.0.0-rc.0",
-    "next": "15.0.3"
+    "react-dom": "19.0.0-rc.0"
   },
   "devDependencies": {
     "@biomejs/biome": "1.9.4",
@@ -21,6 +22,7 @@
     "@types/react-dom": "^18",
     "postcss": "^8",
     "tailwindcss": "^3.4.1",
-    "typescript": "^5"
+    "typescript": "^5",
+    "vitest": "^2.1.4"
   }
 }
