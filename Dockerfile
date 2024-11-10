@@ -26,3 +26,13 @@ COPY . .
 
 EXPOSE 3000
 HEALTHCHECK --interval=3s --timeout=3s --start-period=5s --retries=10 CMD curl -f http://localhost:3000/health || exit 1
+
+################################################################################
+# Stage 3: test application
+################################################################################
+FROM base AS test
+WORKDIR /app
+# Copy node_modules from deps stage
+COPY --from=deps /app/node_modules ./node_modules
+# Copy the rest of the application
+COPY . .
