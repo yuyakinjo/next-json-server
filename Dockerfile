@@ -36,3 +36,4 @@ WORKDIR /app
 COPY --from=deps /app/node_modules ./node_modules
 # Copy the rest of the application
 COPY . .
+ENV ENV=docker
