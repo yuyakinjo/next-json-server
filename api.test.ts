@@ -32,7 +32,6 @@ describe("API Tests", () => {
       body: JSON.stringify(updatedItem),
     });
     const data = await response.json();
-    console.dir(data);
     expect(response.status).toBe(200);
     expect(data.title).toBe(updatedItem.title);
     expect(data.views).toBe(updatedItem.views);
