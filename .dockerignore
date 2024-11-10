@@ -7,3 +7,5 @@ node_modules
 .next
 .vscode
 .github
+docker-compose.yml
+Dockerfile
