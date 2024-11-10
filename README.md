@@ -4,6 +4,10 @@
 
 This is something I created to enable requests from JSON in Next.js, taking inspiration from [json-server](https://github.com/typicode/json-server).
 
+## Features
+
+- For App Routers
+
 ## Getting Started
 
 1. Install the package
