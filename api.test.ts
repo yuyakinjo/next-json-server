@@ -2,7 +2,7 @@ import { describe, expect, it } from "vitest";
 
 describe("API Tests", () => {
   const baseUrl =
-    process.env.ENV === "dev" ? "http://localhost:3000" : "http://web:3000";
+    process.env.ENV === "docker" ? "http://web:3000" : "http://localhost:3000";
 
   it("should return a list of posts", async () => {
     const response = await fetch(`${baseUrl}/json/posts`);
