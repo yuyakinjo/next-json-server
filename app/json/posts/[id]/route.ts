@@ -1,8 +1,8 @@
 import { readFileSync, writeFileSync } from "node:fs";
 import { basename, join } from "node:path";
-import { DB_JSON_PATH } from "@/scripts/constants";
-import { generateRelationMap } from "@/scripts/generate-relation-map";
 import { type NextRequest, NextResponse } from "next/server";
+import { generateRelationMap } from "@/scripts/generate-relation-map";
+import { DB_JSON_PATH } from "@/scripts/constants";
 
 export interface Posts {
   id: string;
@@ -48,15 +48,10 @@ export async function GET(req: NextRequest) {
 export async function PUT(req: NextRequest) {
   const { pathname } = new URL(req.url);
   const id = basename(pathname);
-  console.log("🚀 ~ PUT ~ id:", id);
   const resource = "posts";
   const updatedItem: Posts = await req.json();
-
-  if (updatedItem.id !== id) {
-    return NextResponse.json({ message: "ID mismatch" }, { status: 400 });
-  }
-
   const index = dbData[resource].findIndex((item: Posts) => item.id === id);
+
   if (index === -1)
     return NextResponse.json({ message: "Not found" }, { status: 404 });
   dbData[resource][index] = updatedItem;

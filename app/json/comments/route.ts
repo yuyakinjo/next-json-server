@@ -13,7 +13,7 @@ export interface Comments {
 }
 
 const dbPath = DB_JSON_PATH;
-const dbData = JSON.parse(readFileSync(dbPath, 'utf-8'));
+const dbData = JSON.parse(readFileSync(dbPath, "utf-8"));
 const relationMap = generateRelationMap(dbData);
 
 const operators = {
@@ -80,10 +80,10 @@ const applyInnerJoin = <T extends { id: string }>(
 
 export async function GET(req: NextRequest) {
   const { searchParams } = new URL(req.url);
-  const page = Number(searchParams.get('page') || '1');
-  const limit = Number(searchParams.get('limit') || '10');
-  const sort = searchParams.get('sort');
-  const resource = 'comments';
+  const page = Number(searchParams.get("page") || "1");
+  const limit = Number(searchParams.get("limit") || "10");
+  const sort = searchParams.get("sort");
+  const resource = "comments";
   const data = dbData[resource];
   const filtered = applyFilters(data, searchParams);
   const joined = applyInnerJoin(filtered, dbData, resource);
@@ -91,11 +91,11 @@ export async function GET(req: NextRequest) {
   const start = (page - 1) * limit;
   const end = start + limit;
   const paginatedData = sorted.slice(start, end);
-  return NextResponse.json(paginatedData, { headers: { 'X-Total-Count': filtered.length.toString() } });
+  return NextResponse.json(paginatedData, { headers: { "X-Total-Count": filtered.length.toString() } });
 }
 
 export async function POST(req: NextRequest) {
-  const resource = 'comments';
+  const resource = "comments";
   const reqBody: Comments = await req.json();
   const newItem = { ...reqBody, id: randomUUID() };
   dbData[resource].push(newItem);
@@ -105,8 +105,8 @@ export async function POST(req: NextRequest) {
 
 export async function PUT(req: NextRequest) {
   const { searchParams } = new URL(req.url);
-  const id = searchParams.get('id');
-  const resource = 'comments';
+  const id = searchParams.get("id");
+  const resource = "comments";
   const updatedItem: Comments = await req.json();
   const index = dbData[resource].findIndex((item: Comments) => item.id === id);
 
@@ -119,8 +119,8 @@ export async function PUT(req: NextRequest) {
 
 export async function DELETE(req: NextRequest) {
   const { searchParams } = new URL(req.url);
-  const id = searchParams.get('id');
-  const resource = 'comments';
+  const id = searchParams.get("id");
+  const resource = "comments";
   dbData[resource] = dbData[resource].filter((item: Comments) => item.id !== id);
   writeFileSync(dbPath, JSON.stringify(dbData, null, 2));
   return NextResponse.json(null, { status: 204 });

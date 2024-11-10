@@ -4,7 +4,7 @@ export const generateRouteContentDetail = (
 ) => {
   const typeName = key.charAt(0).toUpperCase() + key.slice(1);
   return `
-import { readFileSync, writeFileSync } from 'node:fs';
+import { readFileSync, writeFileSync } from "node:fs";
 import { basename, join } from "node:path";
 import { type NextRequest, NextResponse } from "next/server";
 import { generateRelationMap } from "@/scripts/generate-relation-map";
@@ -13,7 +13,7 @@ import { DB_JSON_PATH } from "@/scripts/constants";
 ${interfaceContent}
 
 const dbPath = DB_JSON_PATH;
-const dbData = JSON.parse(readFileSync(dbPath, 'utf-8'));
+const dbData = JSON.parse(readFileSync(dbPath, "utf-8"));
 const relationMap = generateRelationMap(dbData);
 
 const applyInnerJoin = <T extends { id: string }>(
@@ -38,7 +38,7 @@ const applyInnerJoin = <T extends { id: string }>(
 export async function GET(req: NextRequest) {
   const { pathname } = new URL(req.url);
   const id = basename(pathname);
-  const resource = '${key}';
+  const resource = "${key}";
   const item = dbData[resource].find((item: ${typeName}) => item.id === id);
   if (!item) {
     return NextResponse.json({ message: "Not found" }, { status: 404 });
@@ -50,7 +50,7 @@ export async function GET(req: NextRequest) {
 export async function PUT(req: NextRequest) {
   const { pathname } = new URL(req.url);
   const id = basename(pathname);
-  const resource = '${key}';
+  const resource = "${key}";
   const updatedItem: ${typeName} = await req.json();
   const index = dbData[resource].findIndex((item: ${typeName}) => item.id === id);
 
@@ -64,7 +64,7 @@ export async function PUT(req: NextRequest) {
 export async function PATCH(req: NextRequest) {
   const { pathname } = new URL(req.url);
   const id = basename(pathname);
-  const resource = '${key}';
+  const resource = "${key}";
   const updatedFields: Partial<${typeName}> = await req.json();
   const index = dbData[resource].findIndex((item: ${typeName}) => item.id === id);
 
@@ -78,7 +78,7 @@ export async function PATCH(req: NextRequest) {
 export async function DELETE(req: NextRequest) {
   const { pathname } = new URL(req.url);
   const id = basename(pathname);
-  const resource = '${key}';
+  const resource = "${key}";
   dbData[resource] = dbData[resource].filter((item: ${typeName}) => item.id !== id);
   writeFileSync(dbPath, JSON.stringify(dbData, null, 2));
   return new NextResponse(null, { status: 204 });
