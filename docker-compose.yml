@@ -10,5 +10,16 @@ services:
       - .:/app
       - node_modules:/app/node_modules
 
+  test:
+    build:
+      context: .
+      target: dev
+    profiles:
+      - test
+    command: ["bun", "test"]
+    depends_on:
+      web:
+        condition: service_healthy
+
 volumes:
   node_modules:
