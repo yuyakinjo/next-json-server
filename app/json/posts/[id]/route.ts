@@ -1,5 +1,5 @@
 import { readFileSync, writeFileSync } from "node:fs";
-import { basename, join } from "node:path";
+import { basename } from "node:path";
 import { type NextRequest, NextResponse } from "next/server";
 import { generateRelationMap } from "@/scripts/generate-relation-map";
 import { DB_JSON_PATH } from "@/scripts/constants";
