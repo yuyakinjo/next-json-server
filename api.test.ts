@@ -41,7 +41,7 @@ describe("API Tests", () => {
   });
 
   it("should delete an item", async () => {
-    const response = await fetch(`${baseUrl}/json/posts/2`, {
+    const response = await fetch(`${baseUrl}/json/posts/1`, {
       method: "DELETE",
     });
     expect(response.status).toBe(204);
