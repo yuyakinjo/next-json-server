@@ -20,18 +20,11 @@ jobs:
       - name: Test
         run: docker compose --profile test up --abort-on-container-exit --exit-code-from test
 
-      - name: Notify Slack on success
-        if: success()
+      - name: Notify Slack
+        if: always()
         uses: 8398a7/action-slack@v3
         with:
-          status: success
-        env:
-          SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}
-
-      - name: Notify Slack on failure
-        if: failure()
-        uses: 8398a7/action-slack@v3
-        with:
-          status: failure
+          status: ${{ job.status }}
+          fields: message,eventName,ref,workflow,job,took
         env:
           SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}
