@@ -1,7 +1,5 @@
 import { randomUUID } from "node:crypto";
 import { readFileSync, writeFileSync } from "node:fs";
-import { join } from "node:path";
-import type DBJson from "@/db.json";
 import { type NextRequest, NextResponse } from "next/server";
 import { generateRelationMap } from "@/scripts/generate-relation-map";
 import { DB_JSON_PATH } from "@/scripts/constants";
