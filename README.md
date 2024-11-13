@@ -94,16 +94,3 @@ curl http://localhost:3000/json/posts
   }
 ]
 ```
-
-## TODO
-
-- [ ] use [instruments.ts](https://nextjs.org/docs/app/building-your-application/optimizing/instrumentation) to generate a json route
-- [ ] generate server action
-- [ ] create validation for zod object or class
-- [ ] create test of every request and function
-- [ ] deliver the npm package
-- [ ] choice db.json name, put path in the command
-- [x] set dependabot config
-- [ ] generate prisma schema from db.json
-
-Slack WebHook URL: <https://kinjo-yarn.slack.com/services/8008164723714?updated=1>
