@@ -31,4 +31,5 @@ jobs:
           status: ${{ job.status }}
           fields: message,eventName,ref,workflow,job,took
         env:
+          # slack settings URL: https://yan-hubot-study.slack.com/services/8095672237655?updated=1
           SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}
