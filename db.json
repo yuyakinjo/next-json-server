@@ -7,7 +7,5 @@
     { "id": "1", "text": "a comment about post 1", "postsId": "1" },
     { "id": "2", "text": "another comment about post 1", "postsId": "1" }
   ],
-  "profile": {
-    "name": "yuyakinjo"
-  }
+  "users": [{ "id": "1", "name": "yuyakinjo" }]
 }
