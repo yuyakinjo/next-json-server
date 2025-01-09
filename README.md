@@ -21,7 +21,6 @@ bun i
 2. Create a file in the root of your project called `db.json`
 
 ```json:db.json
-// db.json
 {
   "posts": [
     { "id": "1", "title": "a title", "views": 100 },
@@ -31,37 +30,18 @@ bun i
     { "id": "1", "text": "a comment about post 1", "postsId": "1" },
     { "id": "2", "text": "another comment about post 1", "postsId": "1" }
   ],
-  "profile": {
-    "name": "yuyakinjo"
-  }
+  "users": [{ "id": "1", "name": "yuyakinjo" }]
 }
+
 ```
 
-3. Generate a route using CLI
-
-```bash
-bun gen:json:route
-
-# Folders and route.ts files created successfully.
-```
-
-Then, genarated the following files:
-
-```bash
-app/json/comments/[id]/route.ts
-app/json/comments/route.ts
-app/json/posts/[id]/route.ts
-app/json/posts/route.ts
-app/json/profile/route.ts
-```
-
-4. Run the server
+1. Run the server
 
 ```bash
 bun dev
 ```
 
-5. Request the route
+2. Request the route
 
 ```bash
 curl http://localhost:3000/json/posts
@@ -73,24 +53,31 @@ curl http://localhost:3000/json/posts
     "id": "1",
     "title": "a title",
     "views": 100,
-    "comments": [
-      {
-        "id": "1",
-        "text": "a comment about post 1",
-        "postsId": "1"
-      },
-      {
-        "id": "2",
-        "text": "another comment about post 1",
-        "postsId": "1"
-      }
-    ]
   },
   {
     "id": "2",
     "title": "another title",
     "views": 200,
-    "comments": []
   }
 ]
+```
+
+# Array Data can below requests
+
+```
+GET    /posts
+GET    /posts/1
+POST   /posts
+PUT    /posts/1
+PATCH  /posts/1
+DELETE /posts/1
+```
+
+# Single Data
+
+```
+GET    /profile
+POST   /profile
+PUT    /profile
+PATCH  /profile
 ```
