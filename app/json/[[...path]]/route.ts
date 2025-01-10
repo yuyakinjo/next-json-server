@@ -1,9 +1,17 @@
-import { DB_JSON_PATH } from "@/app/json/[[...path]]/constants";
-import { getJsonData, toJsonString } from "@/app/json/[[...path]]/internal";
+import { getJsonData, jsonFile } from "@/app/json/[[...path]]/internal";
 import { type NextRequest, NextResponse } from "next/server";
 import { randomUUID } from "node:crypto";
-import { writeFileSync } from "node:fs";
-import { assocPath, findIndex, omit, path, propEq, update } from "ramda";
+import {
+  assocPath,
+  complement,
+  filter,
+  findIndex,
+  omit,
+  path,
+  pathEq,
+  propEq,
+  update,
+} from "ramda";
 
 // GET /json/[path]
 // GET /json/[path]/[id]
@@ -18,20 +26,18 @@ export async function GET(req: NextRequest) {
 
 // POST /json/[path]
 // array: add new item
-// object: replace object
 export async function POST(req: NextRequest) {
   const { relativePaths, dynamicData, dbJson, reqBody } =
     await getJsonData(req);
   const newItem = { ...reqBody, id: randomUUID() };
   const updateData = [...[dynamicData].flat(), newItem];
   const updatedJson = assocPath(relativePaths, updateData, dbJson);
-  writeFileSync(DB_JSON_PATH, toJsonString(updatedJson));
+  await jsonFile.write(updatedJson);
   return NextResponse.json(newItem, { status: 201 });
 }
 
 // PUT /json/[path]/[id]
 // array: replace array only if item exists
-// object: replace object
 export async function PUT(req: NextRequest) {
   const {
     dbJson,
@@ -46,7 +52,8 @@ export async function PUT(req: NextRequest) {
   if (!dynamicData) {
     return NextResponse.json({ message: "There is no data" }, { status: 404 });
   }
-  const whereEqId = propEq(baseName, "id");
+  const id = baseName;
+  const whereEqId = propEq(id, "id");
   const index = findIndex(whereEqId, path(middlePaths, dbJson) ?? []);
   if (index === -1) {
     return NextResponse.json({ message: "Not found" }, { status: 404 });
@@ -57,7 +64,30 @@ export async function PUT(req: NextRequest) {
     update(index, updatedData, data),
     dbJson,
   );
-  console.log({ updatedData, updatedJson, index });
-  writeFileSync(DB_JSON_PATH, toJsonString(updatedJson));
+  await jsonFile.write(updatedJson);
   return NextResponse.json(reqBody);
+}
+
+// DELETE /json/[path]/[id]
+// array: remove item
+export async function DELETE(req: NextRequest) {
+  const { dbJson, middlePaths, baseName, detailData, dynamicData, listData } =
+    await getJsonData(req);
+  const data = [listData].flat();
+  if (!dynamicData) {
+    return NextResponse.json({ message: "There is no data" }, { status: 404 });
+  }
+  const id = baseName;
+  const whereEqId = propEq(baseName, "id");
+  const index = findIndex(whereEqId, path(middlePaths, dbJson) ?? []);
+  if (index === -1) {
+    return NextResponse.json({ message: "Not found" }, { status: 404 });
+  }
+  const updatedJson = assocPath(
+    middlePaths,
+    filter(complement(pathEq(id, ["id"])), data),
+    dbJson,
+  );
+  await jsonFile.write(updatedJson);
+  return NextResponse.json(detailData, { status: 204 });
 }

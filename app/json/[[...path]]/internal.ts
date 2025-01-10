@@ -1,28 +1,11 @@
+import { DB_JSON_PATH } from "@/app/json/[[...path]]/constants";
 import type { NextRequest } from "next/server";
-import { readFile } from "node:fs/promises";
+import { readFile, writeFile } from "node:fs/promises";
 import { basename, dirname } from "node:path";
 import { defaultTo, hasPath, intersection, path, pathEq } from "ramda";
-import { DB_JSON_PATH } from "./constants";
 
 const prefix = "json";
 
-/**
- * Retrieves JSON data based on the request URL and request body.
- *
- * @param {NextRequest} req - The incoming request object.
- * @returns {Promise<object>} An object containing various data derived from the request and the database JSON.
- *
- * @property {object} dynamicData - The dynamic data extracted from the database JSON based on the request path.
- * @property {object} dbJson - The entire content of the database JSON file.
- * @property {object} reqBody - The parsed JSON body of the request.
- * @property {string} dirName - The directory name derived from the request path.
- * @property {string} baseName - The base name derived from the request path.
- * @property {string[]} dirPaths - The directory paths split into an array.
- * @property {boolean} isRootPath - A flag indicating if the request path is the root path.
- * @property {boolean} isDetailPath - A flag indicating if the request path is a detail path.
- * @property {object} detailData - The detailed data extracted from the database JSON based on the request path.
- * @property {string[]} relativePaths - The relative paths split into an array.
- */
 export const getJsonData = async (req: NextRequest) => {
   const { pathname } = new URL(req.url); // ex. /json/posts/1
   // #region relative
@@ -37,9 +20,7 @@ export const getJsonData = async (req: NextRequest) => {
   const middlePaths = intersection(relativePaths, dirPaths); // ex. intersection(["posts", "1"], ["json", "posts"]) => ["posts"]
   const isRootPath = `/${prefix}` === `/${baseName}`;
   const reqBody = await req?.json().catch(defaultTo({})); // ex. { title: "Hello" }
-  const dbJson = await readFile(DB_JSON_PATH, "utf-8")
-    .then(JSON.parse)
-    .catch(defaultTo({})); // db.jsonの内容
+  const dbJson = await jsonFile.read();
   const dynamicData = path(relativePaths, dbJson) ?? {}; // db.json の dynamicPaths のデータを取得
   const listData = path(middlePaths, dbJson) ?? []; // db.json の middlePaths のデータを取得
   const isDetailPath = !hasPath(relativePaths, dbJson); // /json/posts/1 false, /json/posts true
@@ -58,9 +39,16 @@ export const getJsonData = async (req: NextRequest) => {
     middlePaths,
     listData,
   };
-  console.log(result);
 
   return result;
 };
 
-export const toJsonString = (data: unknown) => JSON.stringify(data, null, 2);
+export const jsonFile = {
+  toJsonString: (data: unknown) => JSON.stringify(data, null, 2),
+  async write(updatedJson: unknown, path = DB_JSON_PATH) {
+    return writeFile(path, this.toJsonString(updatedJson));
+  },
+  async read(path = DB_JSON_PATH) {
+    return readFile(path, "utf-8").then(JSON.parse).catch(defaultTo({})); // db.jsonの内容
+  },
+};
