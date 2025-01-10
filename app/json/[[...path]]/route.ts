@@ -23,9 +23,7 @@ export async function POST(req: NextRequest) {
   const { relativePaths, dynamicData, dbJson, reqBody } =
     await getJsonData(req);
   const newItem = { id: randomUUID(), ...reqBody };
-  const updateData = Array.isArray(dynamicData)
-    ? [...dynamicData, newItem]
-    : reqBody;
+  const updateData = [...[dynamicData].flat(), newItem];
   const updatedJson = assocPath(relativePaths, updateData, dbJson);
   writeFileSync(DB_JSON_PATH, toJsonString(updatedJson));
   return NextResponse.json(newItem, { status: 201 });
