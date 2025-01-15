@@ -1,14 +1,14 @@
+import { randomUUID } from "node:crypto";
 import { getJsonData, jsonFile } from "@/app/json/[[...path]]/internal";
 import { type NextRequest, NextResponse } from "next/server";
-import { randomUUID } from "node:crypto";
 import {
+  path,
   assocPath,
   complement,
   filter,
   findIndex,
   isEmpty,
   omit,
-  path,
   pathEq,
   propEq,
   update,

@@ -1,8 +1,8 @@
-import { DB_JSON_PATH } from "@/app/json/[[...path]]/constants";
-import type { NextRequest } from "next/server";
 import { readFile, writeFile } from "node:fs/promises";
 import { basename, dirname } from "node:path";
-import { defaultTo, intersection, path, pathEq } from "ramda";
+import { DB_JSON_PATH } from "@/app/json/[[...path]]/constants";
+import type { NextRequest } from "next/server";
+import { path, defaultTo, intersection, pathEq } from "ramda";
 
 const prefix = "json";
 
