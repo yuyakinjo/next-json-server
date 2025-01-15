@@ -6,6 +6,7 @@ import {
   complement,
   filter,
   findIndex,
+  isEmpty,
   omit,
   path,
   pathEq,
@@ -16,11 +17,13 @@ import {
 // GET /json/[path]
 // GET /json/[path]/[id]
 export async function GET(req: NextRequest) {
-  const { isDetailPath, listData, detailData, isRootPath, dbJson } =
+  const { isDetailPath, dynamicData, detailData, isRootPath, dbJson } =
     await getJsonData(req);
   if (isRootPath) return NextResponse.json(dbJson);
-
-  const result = isDetailPath ? detailData : listData;
+  const result = isDetailPath ? detailData : dynamicData;
+  if (isEmpty(result)) {
+    return NextResponse.json({ message: "Not Found" }, { status: 404 });
+  }
   return NextResponse.json(result);
 }
 
@@ -39,18 +42,11 @@ export async function POST(req: NextRequest) {
 // PUT /json/[path]/[id]
 // array: replace array only if item exists
 export async function PUT(req: NextRequest) {
-  const {
-    dbJson,
-    reqBody,
-    middlePaths,
-    baseName,
-    detailData,
-    dynamicData,
-    listData,
-  } = await getJsonData(req);
+  const { dbJson, reqBody, middlePaths, baseName, detailData, listData } =
+    await getJsonData(req);
   const data = [listData].flat();
-  if (!dynamicData) {
-    return NextResponse.json({ message: "There is no data" }, { status: 404 });
+  if (isEmpty(detailData)) {
+    return NextResponse.json({ message: "Not Found" }, { status: 404 });
   }
   const id = baseName;
   const whereEqId = propEq(id, "id");
@@ -71,17 +67,17 @@ export async function PUT(req: NextRequest) {
 // DELETE /json/[path]/[id]
 // array: remove item
 export async function DELETE(req: NextRequest) {
-  const { dbJson, middlePaths, baseName, detailData, dynamicData, listData } =
+  const { dbJson, middlePaths, baseName, dynamicData, listData } =
     await getJsonData(req);
   const data = [listData].flat();
-  if (!dynamicData) {
-    return NextResponse.json({ message: "There is no data" }, { status: 404 });
+  if (isEmpty(dynamicData)) {
+    return NextResponse.json({ message: "Not Found" }, { status: 404 });
   }
   const id = baseName;
   const whereEqId = propEq(baseName, "id");
   const index = findIndex(whereEqId, path(middlePaths, dbJson) ?? []);
   if (index === -1) {
-    return NextResponse.json({ message: "Not found" }, { status: 404 });
+    return NextResponse.json({ message: "Not Found" }, { status: 404 });
   }
   const updatedJson = assocPath(
     middlePaths,
@@ -89,5 +85,5 @@ export async function DELETE(req: NextRequest) {
     dbJson,
   );
   await jsonFile.write(updatedJson);
-  return NextResponse.json(detailData, { status: 204 });
+  return new NextResponse(null, { status: 204 });
 }

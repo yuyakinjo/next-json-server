@@ -27,12 +27,11 @@ describe("API Tests", () => {
 
   it("should update an item", async () => {
     const updatedItem = { id: "1", title: "Updated Item", views: 100 };
+    const body = JSON.stringify(updatedItem);
     const response = await fetch(`${baseUrl}/json/posts/1`, {
       method: "PUT",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify(updatedItem),
+      headers: { "Content-Type": "application/json" },
+      body,
     });
     const data = await response.json();
     expect(response.status).toBe(200);
@@ -41,9 +40,13 @@ describe("API Tests", () => {
   });
 
   it("should delete an item", async () => {
-    const response = await fetch(`${baseUrl}/json/posts/1`, {
+    const deleted = await fetch(`${baseUrl}/json/posts/1`, {
       method: "DELETE",
     });
-    expect(response.status).toBe(204);
+    expect(deleted.status).toBe(204);
+    const afterDelete = await fetch(`${baseUrl}/json/posts/1`, {
+      method: "GET",
+    });
+    expect(afterDelete.status).toBe(404);
   });
 });

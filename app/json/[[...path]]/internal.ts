@@ -2,7 +2,7 @@ import { DB_JSON_PATH } from "@/app/json/[[...path]]/constants";
 import type { NextRequest } from "next/server";
 import { readFile, writeFile } from "node:fs/promises";
 import { basename, dirname } from "node:path";
-import { defaultTo, hasPath, intersection, path, pathEq } from "ramda";
+import { defaultTo, intersection, path, pathEq } from "ramda";
 
 const prefix = "json";
 
@@ -18,12 +18,12 @@ export const getJsonData = async (req: NextRequest) => {
   const baseName = basename(pathname); // ex. 1
   // #region intersection
   const middlePaths = intersection(relativePaths, dirPaths); // ex. intersection(["posts", "1"], ["json", "posts"]) => ["posts"]
-  const isRootPath = `/${prefix}` === `/${baseName}`;
+  const isRootPath = `${prefix}` === `${baseName}`;
   const reqBody = await req?.json().catch(defaultTo({})); // ex. { title: "Hello" }
   const dbJson = await jsonFile.read();
   const dynamicData = path(relativePaths, dbJson) ?? {}; // db.json の dynamicPaths のデータを取得
-  const listData = path(middlePaths, dbJson) ?? []; // db.json の middlePaths のデータを取得
-  const isDetailPath = !hasPath(relativePaths, dbJson); // /json/posts/1 false, /json/posts true
+  const listData = path(middlePaths, dbJson) ?? []; // db.json の relativePaths のデータを取得
+  const isDetailPath = !Array.isArray(dynamicData); // /json/posts/1 false, /json/posts true
   const detailData = [listData].flat().find(pathEq(baseName, ["id"])) ?? {};
   const result = {
     dynamicData,
@@ -40,6 +40,7 @@ export const getJsonData = async (req: NextRequest) => {
     listData,
   };
 
+  console.log("🚀 ~ getJsonData ~ result:", result);
   return result;
 };
 
