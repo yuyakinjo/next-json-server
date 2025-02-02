@@ -10,6 +10,7 @@ services:
       watch:
         - action: sync
           path: .
+          target: /app
           ignore: [node_modules, .github]
         - action: rebuild
           path: package.json
