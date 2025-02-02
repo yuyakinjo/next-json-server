@@ -72,12 +72,3 @@ PUT    /posts/1
 PATCH  /posts/1
 DELETE /posts/1
 ```
-
-# Single Data
-
-```
-GET    /profile
-POST   /profile
-PUT    /profile
-PATCH  /profile
-```
