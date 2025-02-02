@@ -6,9 +6,13 @@ services:
     ports:
       - "3000:3000"
     command: ["bun", "run", "dev"]
-    volumes:
-      - .:/app
-      - node_modules:/app/node_modules
+    develop:
+      watch:
+        - action: sync
+          path: .
+          ignore: [node_modules, .github]
+        - action: rebuild
+          path: package.json
 
   test:
     build:
@@ -20,6 +24,3 @@ services:
     depends_on:
       web:
         condition: service_healthy
-
-volumes:
-  node_modules:
