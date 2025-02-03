@@ -1,3 +1,5 @@
+# Next JSON Server
+
 [![Test](https://github.com/yuyakinjo/next-json-server/actions/workflows/test.yml/badge.svg)](https://github.com/yuyakinjo/next-json-server/actions/workflows/test.yml)
 [![Build](https://github.com/yuyakinjo/next-json-server/actions/workflows/build.yml/badge.svg)](https://github.com/yuyakinjo/next-json-server/actions/workflows/build.yml)
 [![Lint](https://github.com/yuyakinjo/next-json-server/actions/workflows/lint.yml/badge.svg)](https://github.com/yuyakinjo/next-json-server/actions/workflows/lint.yml)
@@ -18,7 +20,7 @@ bun -v # or npm, yarn, pnpm
 bun i
 ```
 
-2. Create a file in the root of your project called `db.json`
+Create a file in the root of your project called `db.json`
 
 ```json:db.json
 {
@@ -62,9 +64,9 @@ curl http://localhost:3000/json/posts
 ]
 ```
 
-# Array Data can below requests
+## Array Data can below requests
 
-```
+```sh
 GET    /posts
 GET    /posts/1
 POST   /posts
