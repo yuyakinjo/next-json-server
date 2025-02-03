@@ -1,0 +1,1 @@
+- forEach ではなく、for of か map を使うようにしてください

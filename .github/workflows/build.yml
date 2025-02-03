@@ -28,13 +28,3 @@ jobs:
 
       - name: Build project
         run: bun run build
-
-      - name: Notify Slack
-        if: always()
-        uses: 8398a7/action-slack@v3
-        with:
-          status: ${{ job.status }}
-          fields: message,eventName,ref,workflow,job,took
-        env:
-          # slack settings URL: https://yan-hubot-study.slack.com/services/8095672237655?updated=1
-          SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}
