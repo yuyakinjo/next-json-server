@@ -1,7 +1,7 @@
 import fs from "node:fs";
 import path from "node:path";
 import { type NextRequest, NextResponse } from "next/server";
-import { isNotEmpty, path as pathR, when } from "ramda";
+import { isNotEmpty } from "ramda";
 
 const basePath = "/json";
 
