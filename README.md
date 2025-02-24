@@ -51,13 +51,18 @@ bun dev
 
 ### リソースの取得
 
+#### パスを辿る
+
 - `GET /json/posts` - 全ての posts を取得
 - `GET /json/posts/1` - ID:1 の投稿を取得
+- `GET /json/posts/1/comments` - ID:1 の投稿のコメントを取得
+- `GET /json/posts/1/comments/1` - ID:1 の投稿のコメントを取得
+
+#### クエリを使用
+
 - `GET /json/posts?id=1` - ID:1 の投稿を取得
 - `GET /json/posts?id=1&id=2` - ID:1 と ID:2 の投稿を取得
 - `GET /json/posts?title=starwars` - title が starwars の投稿を取得
-- `GET /json/posts/1/comments` - ID:1 の投稿のコメントを取得
-- `GET /json/posts/1/comments/1` - ID:1 の投稿のコメントを取得
 - `GET /json/posts?gt_views=100` - views が 100 より大きい投稿を取得
 - `GET /json/posts?lt_views=100` - views が 100 より小さい投稿を取得
 - `GET /json/posts?gte_views=100` - views が 100 以上の投稿を取得
