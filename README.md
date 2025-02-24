@@ -11,7 +11,7 @@ Next.js App Router ベースの軽量な JSON Server 実装です。[json-server
 - 💡 Next.js App Router 対応
 - 🚀 シンプルなセットアップ
 - 📝 JSON file ベースのデータ管理
-- 🔄 完全な RESTful API サポート
+- 🔄 RESTful API サポート
 - 🛠 カスタマイズ可能なエンドポイント
 
 ## 始め方
@@ -51,14 +51,23 @@ bun dev
 
 ### リソースの取得
 
-- `GET /json/posts` - 全ての投稿を取得
+- `GET /json/posts` - 全ての posts を取得
 - `GET /json/posts/1` - ID:1 の投稿を取得
-- `GET /json/comments` - 全てのコメントを取得
-- `GET /json/users` - 全てのユーザーを取得
+- `GET /json/posts?id=1` - ID:1 の投稿を取得
+- `GET /json/posts?id=1&id=2` - ID:1 と ID:2 の投稿を取得
+- `GET /json/posts?title=starwars` - title が starwars の投稿を取得
+- `GET /json/posts/1/comments` - ID:1 の投稿のコメントを取得
+- `GET /json/posts/1/comments/1` - ID:1 の投稿のコメントを取得
+- `GET /json/posts?gt_views=100` - views が 100 より大きい投稿を取得
+- `GET /json/posts?lt_views=100` - views が 100 より小さい投稿を取得
+- `GET /json/posts?gte_views=100` - views が 100 以上の投稿を取得
+- `GET /json/posts?lte_views=100` - views が 100 以下の投稿を取得
+- `GET /json/posts?ne_views=100` - views が 100 でない投稿を取得
+- `GET /json/posts?in_views=100,200` - views が 100 か 200 の投稿を取得
 
 ### リソースの作成
 
-- `POST /json/posts` - 新しい投稿を作成
+- `POST /json/posts` - 新しい posts を作成
 
 ```json
 {
@@ -69,7 +78,7 @@ bun dev
 
 ### リソースの更新
 
-- `PUT /json/posts/1` - ID:1 の投稿を更新
+- `PUT /json/posts/1` - ID:1 の posts を更新
 
 ```json
 {
@@ -80,7 +89,7 @@ bun dev
 
 ### リソースの削除
 
-- `DELETE /json/posts/1` - ID:1 の投稿を削除
+- `DELETE /json/posts/1` - ID:1 の posts を削除
 
 ## レスポンス例
 
