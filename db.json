@@ -2,7 +2,7 @@
   "posts": [
     {
       "id": "1",
-      "title": "a title",
+      "title": "harry potter",
       "views": 100,
       "comments": [
         { "id": "1", "text": "a comment about post 1", "postsId": "1" },
@@ -11,7 +11,7 @@
     },
     {
       "id": "2",
-      "title": "another title",
+      "title": "starwars",
       "views": 200,
       "comments": [
         { "id": "3", "text": "a comment about post 2", "postsId": "2" }
