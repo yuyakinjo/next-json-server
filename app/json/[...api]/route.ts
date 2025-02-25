@@ -3,7 +3,7 @@ import fs from "node:fs";
 import path from "node:path";
 import { type NextRequest, NextResponse } from "next/server";
 import { isNotEmpty } from "ramda";
-import { filterDataBySearchParams, isNumber, isZero } from "./internal";
+import { filterDataBySearchParams, isZero } from "./internal";
 
 const basePath = "/json";
 
@@ -73,9 +73,15 @@ export async function POST(req: NextRequest) {
     // 既存のリソースの配列を取得
     const existingItems = data[resourceName];
 
-    // 配列の長さ+1を新しいIDとして使用
-    // これにより、テストが期待する通りのIDが生成される
-    const newId = String(existingItems.length + 1);
+    // 既存のIDから最大値を取得
+    const maxId = existingItems.reduce((max: number, item: { id: string }) => {
+      // idが数値に変換可能な場合のみ比較対象とする
+      const itemId = Number(item.id);
+      return !Number.isNaN(itemId) && itemId > max ? itemId : max;
+    }, 0);
+
+    // 最大ID+1を新しいIDとして使用
+    const newId = String(maxId + 1);
 
     // 新しいアイテムを作成
     const newItem = {
