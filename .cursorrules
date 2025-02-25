@@ -9,6 +9,7 @@
 - TypeScript
 - Node.js
 - Next.js
+- Vitest
 
 ■ 実装時の注意点
 - 常に既存コードの設計や記法を参考にしてください。
