@@ -2,7 +2,7 @@ import fs from "node:fs";
 import path from "node:path";
 import { type NextRequest, NextResponse } from "next/server";
 import { isNotEmpty } from "ramda";
-import { isNumber, isZero } from "./internal";
+import { getFieldIfPrefixMatches, isNumber, isZero } from "./internal";
 
 const basePath = "/json";
 
@@ -37,32 +37,31 @@ export function GET(req: NextRequest) {
       const val = value as Record<string, string | number>; // 型を明示的に指定
       return Array.from(searchParams.entries()).every(
         ([paramKey, paramValue]) => {
-          if (paramKey.startsWith("gt_")) {
-            const field = paramKey.replace("gt_", "");
-            return isNumber(val[field]) && val[field] > Number(paramValue);
+          // 各プレフィックスに対するフィールド名を取得
+          const gtField = getFieldIfPrefixMatches(paramKey, "gt");
+          const ltField = getFieldIfPrefixMatches(paramKey, "lt");
+          const gteField = getFieldIfPrefixMatches(paramKey, "gte");
+          const lteField = getFieldIfPrefixMatches(paramKey, "lte");
+          const neField = getFieldIfPrefixMatches(paramKey, "ne");
+          const inField = getFieldIfPrefixMatches(paramKey, "in");
+
+          if (gtField && isNumber(val[gtField])) {
+            return Number(val[gtField]) > Number(paramValue);
           }
-          if (paramKey.startsWith("lt_")) {
-            const field = paramKey.replace("lt_", "");
-            return isNumber(val[field]) && val[field] < Number(paramValue);
+          if (ltField && isNumber(val[ltField])) {
+            return Number(val[ltField]) < Number(paramValue);
           }
-          if (paramKey.startsWith("gte_")) {
-            const field = paramKey.replace("gte_", "");
-            return isNumber(val[field]) && val[field] >= Number(paramValue);
+          if (gteField && isNumber(val[gteField])) {
+            return Number(val[gteField]) >= Number(paramValue);
           }
-          if (paramKey.startsWith("lte_")) {
-            const field = paramKey.replace("lte_", "");
-            return isNumber(val[field]) && val[field] <= Number(paramValue);
+          if (lteField && isNumber(val[lteField])) {
+            return Number(val[lteField]) <= Number(paramValue);
           }
-          if (paramKey.startsWith("ne_")) {
-            const field = paramKey.replace("ne_", "");
-            return isNumber(val[field]) && val[field] !== Number(paramValue);
+          if (neField && isNumber(val[neField])) {
+            return Number(val[neField]) !== Number(paramValue);
           }
-          if (paramKey.startsWith("in_")) {
-            const field = paramKey.replace("in_", "");
-            return (
-              isNumber(val[field]) &&
-              paramValue.split(",").includes(`${val[field]}`)
-            );
+          if (inField && isNumber(val[inField])) {
+            return paramValue.split(",").includes(`${val[inField]}`);
           }
           // 重複したクエリパラメータを配列として取得し、includesを使用してフィルタリング
           // ?id=1&id=2 のようなクエリパラメータをフィルタリングする

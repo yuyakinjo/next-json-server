@@ -1,0 +1,9 @@
+---
+description: apiの要件定義
+globs: app/**/route.ts
+alwaysApply: false
+---
+
+# Your rule content
+
+- route.tsを変更した場合、testを実行してください
