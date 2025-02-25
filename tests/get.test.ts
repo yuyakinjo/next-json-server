@@ -6,6 +6,12 @@ type Post = {
   views: number;
 };
 
+type Comment = {
+  id: string;
+  text: string;
+  postId: string;
+};
+
 // JSONレスポンスを取得するための関数
 async function getJsonResponse<T>(url: string): Promise<T> {
   const response = await fetch(url);
@@ -21,10 +27,53 @@ describe("API Tests", () => {
     expect(data.length).toBeGreaterThan(0);
   });
 
+  it("GET Item: should return empty array for not exist property", async () => {
+    const data = await getJsonResponse<[]>(`${baseUrl}/json/notexist`);
+    expect(Array.isArray(data)).toBe(true);
+    expect(data.length).toBe(0);
+  });
+
   it("GET Item: should return a single post", async () => {
     const data = await getJsonResponse<Post>(`${baseUrl}/json/posts/1`);
     expect(Array.isArray(data)).toBe(false);
     expect(data.id).toBe("1");
+  });
+
+  it("GET Comments for Post: should return comments for post ID 1", async () => {
+    const data = await getJsonResponse<Comment[]>(
+      `${baseUrl}/json/posts/1/comments`,
+    );
+    expect(Array.isArray(data)).toBe(true);
+  });
+
+  it("GET Comment for Post: should return comment for post ID 1", async () => {
+    const data = await getJsonResponse<Comment>(
+      `${baseUrl}/json/posts/1/comments/1`,
+    );
+    expect(Array.isArray(data)).toBe(false);
+    expect(data.id).toBe("1");
+  });
+
+  it("GET Comment for Post: should return empty array for post ID 2", async () => {
+    const data = await getJsonResponse<Comment[]>(
+      `${baseUrl}/json/posts/2/comments/1`,
+    );
+    expect(Array.isArray(data)).toBe(true);
+    expect(data.length).toBe(0);
+  });
+
+  it("GET Comment for Post: should return empty array for post ID 3", async () => {
+    const data = await getJsonResponse<Comment[]>(
+      `${baseUrl}/json/posts/3/comments/1`,
+    );
+    expect(Array.isArray(data)).toBe(true);
+    expect(data.length).toBe(0);
+  });
+
+  it("GET Query ID: should return post ID 1", async () => {
+    const data = await getJsonResponse<Post[]>(`${baseUrl}/json/posts?id=1`);
+    expect(data.length).toBe(1);
+    expect(data[0].id).toBe("1");
   });
 
   it("GET Multiple IDs: should return posts with IDs 1 and 2", async () => {
@@ -43,13 +92,6 @@ describe("API Tests", () => {
     expect(data.length).toBe(1);
     expect(Array.isArray(data)).toBe(true);
     expect(data[0].title).toBe("starwars");
-  });
-
-  it("GET Comments for Post: should return comments for post ID 1", async () => {
-    const data = await getJsonResponse<Comment[]>(
-      `${baseUrl}/json/posts/1/comments`,
-    );
-    expect(Array.isArray(data)).toBe(true);
   });
 
   it("GET Greater Than Views: should return posts with views greater than 100", async () => {
@@ -95,19 +137,6 @@ describe("API Tests", () => {
       true,
     );
   });
-
-  // it("POST: should create a new item", async () => {
-  //   const newItem = { name: "Test Item" };
-  //   const body = JSON.stringify(newItem);
-  //   const response = await fetch(`${baseUrl}/json/posts`, {
-  //     method: "POST",
-  //     headers: { "Content-Type": "application/json" },
-  //     body,
-  //   });
-  //   const data = await response.json();
-  //   expect(response.status).toBe(201);
-  //   expect(data.name).toBe(newItem.name);
-  // });
 
   // it("PUT: should update an item", async () => {
   //   const updatedItem = { id: "1", title: "Updated Item", views: 100 };
