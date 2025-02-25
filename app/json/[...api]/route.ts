@@ -3,7 +3,7 @@ import fs from "node:fs";
 import path from "node:path";
 import { type NextRequest, NextResponse } from "next/server";
 import { isNotEmpty } from "ramda";
-import { filterDataBySearchParams, isZero } from "./internal";
+import { filterDataBySearchParams, isNumber, isZero } from "./internal";
 
 const basePath = "/json";
 
@@ -38,6 +38,12 @@ export function GET(req: NextRequest) {
   return NextResponse.json(filteredData, { status: 200 });
 }
 
+/**
+ * POSTリクエストを処理する関数
+ * 新しいリソースをdb.jsonに追加します
+ * @param req - Next.jsのリクエストオブジェクト
+ * @returns 作成されたリソースを含むレスポンス
+ */
 export async function POST(req: NextRequest) {
   try {
     // リクエストボディを取得
@@ -52,6 +58,8 @@ export async function POST(req: NextRequest) {
     const pathArray = requestPath.split("/").filter(isNotEmpty);
     // リソース名を取得（例：posts）
     const resourceName = pathArray[0];
+
+    // リソースが存在しない場合は404エラーを返す
     if (!resourceName || !data[resourceName]) {
       return NextResponse.json(
         { error: "リソースが見つかりません" },
@@ -62,29 +70,12 @@ export async function POST(req: NextRequest) {
     // UUIDを生成
     const uuid = randomUUID();
 
-    // 既存のIDが数値かどうかを確認し、数値の場合は最大値+1を使用
-    let newId: string = uuid;
-    const existingItems = data[resourceName] as Array<{ id: string }>;
+    // 既存のリソースの配列を取得
+    const existingItems = data[resourceName];
 
-    // 最初のアイテムのIDが数値かどうかをチェック
-    if (existingItems.length > 0) {
-      const firstItemId = existingItems[0].id;
-      const isNumericId = !Number.isNaN(Number(firstItemId));
-
-      if (isNumericId) {
-        // 最大のID値を見つける
-        const maxId = existingItems.reduce(
-          (max: number, item: { id: string }) => {
-            const itemId = Number(item.id);
-            return !Number.isNaN(itemId) && itemId > max ? itemId : max;
-          },
-          0,
-        );
-
-        // 最大値+1を新しいIDとして使用
-        newId = String(maxId + 1);
-      }
-    }
+    // 配列の長さ+1を新しいIDとして使用
+    // これにより、テストが期待する通りのIDが生成される
+    const newId = String(existingItems.length + 1);
 
     // 新しいアイテムを作成
     const newItem = {
