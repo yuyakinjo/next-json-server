@@ -2,7 +2,7 @@ import fs from "node:fs";
 import path from "node:path";
 import { type NextRequest, NextResponse } from "next/server";
 import { isNotEmpty } from "ramda";
-import { isZero } from "./internal";
+import { isNumber, isZero } from "./internal";
 
 const basePath = "/json";
 
@@ -39,48 +39,35 @@ export function GET(req: NextRequest) {
         ([paramKey, paramValue]) => {
           if (paramKey.startsWith("gt_")) {
             const field = paramKey.replace("gt_", "");
-            return (
-              typeof val[field] === "number" && val[field] > Number(paramValue)
-            );
+            return isNumber(val[field]) && val[field] > Number(paramValue);
           }
           if (paramKey.startsWith("lt_")) {
             const field = paramKey.replace("lt_", "");
-            return (
-              typeof val[field] === "number" && val[field] < Number(paramValue)
-            );
+            return isNumber(val[field]) && val[field] < Number(paramValue);
           }
           if (paramKey.startsWith("gte_")) {
             const field = paramKey.replace("gte_", "");
-            return (
-              typeof val[field] === "number" && val[field] >= Number(paramValue)
-            );
+            return isNumber(val[field]) && val[field] >= Number(paramValue);
           }
           if (paramKey.startsWith("lte_")) {
             const field = paramKey.replace("lte_", "");
-            return (
-              typeof val[field] === "number" && val[field] <= Number(paramValue)
-            );
+            return isNumber(val[field]) && val[field] <= Number(paramValue);
           }
           if (paramKey.startsWith("ne_")) {
             const field = paramKey.replace("ne_", "");
-            return (
-              typeof val[field] === "number" &&
-              val[field] !== Number(paramValue)
-            );
+            return isNumber(val[field]) && val[field] !== Number(paramValue);
           }
           if (paramKey.startsWith("in_")) {
             const field = paramKey.replace("in_", "");
             return (
-              typeof val[field] === "number" &&
-              paramValue
-                .split(",")
-                .map(Number)
-                .includes(val[field] as number)
+              isNumber(val[field]) &&
+              paramValue.split(",").includes(`${val[field]}`)
             );
           }
           // 重複したクエリパラメータを配列として取得し、includesを使用してフィルタリング
+          // ?id=1&id=2 のようなクエリパラメータをフィルタリングする
           const allValues = searchParams.getAll(paramKey);
-          return allValues.includes(String(val[paramKey]));
+          return allValues.includes(`${val[paramKey]}`);
         },
       );
     })
