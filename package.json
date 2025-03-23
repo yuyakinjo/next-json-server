@@ -14,9 +14,14 @@
     "url": "https://github.com/yuyakinjo/next-json-server/issues"
   },
   "homepage": "https://github.com/yuyakinjo/next-json-server#readme",
+  "bin": {
+    "next-json-server": "./bin/cli.js"
+  },
   "files": [
     "app",
     "public",
+    "bin",
+    "templates",
     "next.config.ts",
     "package.json",
     "README.md",
