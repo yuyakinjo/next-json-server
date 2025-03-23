@@ -3,6 +3,7 @@
   "version": "0.1.0",
   "description": "Next.js App Router based lightweight JSON Server implementation",
   "keywords": ["json-server", "nextjs", "api", "mock", "rest"],
+  "packageManager": "bun@1.2.5",
   "author": "yuyakinjo",
   "license": "MIT",
   "repository": {

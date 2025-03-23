@@ -1,0 +1,161 @@
+---
+description: 
+globs: 
+alwaysApply: false
+---
+---
+description: API仕様とエンドポイントの詳細
+globs: "app/json/**/*.ts"
+alwaysApply: false
+---
+
+# API仕様とドキュメント
+
+## API概要
+
+Next JSON Serverは、JSON fileベースのRESTful APIを提供します。`db.json`ファイルをデータソースとして、標準的なCRUD操作（Create, Read, Update, Delete）を実装しています。
+
+## ベースパス
+
+すべてのAPIエンドポイントは `/json` から始まります:
+
+```
+/json/:resource/:id?/:nested_resource?/:nested_id?
+```
+
+## サポートされるHTTPメソッド
+
+- **GET**: リソースの取得
+- **POST**: リソースの作成
+- **PUT**: リソースの更新（予定）
+- **DELETE**: リソースの削除（予定）
+
+## エンドポイント詳細
+
+### GETリクエスト
+
+#### リソース一覧の取得
+
+```
+GET /json/:resource
+```
+
+例: `GET /json/posts`
+
+レスポンス:
+```json
+[
+  { "id": "1", "title": "First post", "views": 100 },
+  { "id": "2", "title": "Second post", "views": 200 }
+]
+```
+
+#### 特定リソースの取得
+
+```
+GET /json/:resource/:id
+```
+
+例: `GET /json/posts/1`
+
+レスポンス:
+```json
+{ "id": "1", "title": "First post", "views": 100 }
+```
+
+#### ネストしたリソースの取得
+
+```
+GET /json/:resource/:id/:nested_resource
+```
+
+例: `GET /json/posts/1/comments`
+
+レスポンス:
+```json
+[
+  { "id": "1", "text": "Great post!", "postId": "1" },
+  { "id": "2", "text": "I agree", "postId": "1" }
+]
+```
+
+#### クエリフィルタリング
+
+クエリパラメータを使用してリソースをフィルタリングできます:
+
+- **等価フィルタ**: `?<field>=<value>`
+  例: `GET /json/posts?id=1`
+  
+- **複数値フィルタ**: `?<field>=<value1>&<field>=<value2>`
+  例: `GET /json/posts?id=1&id=2`
+
+- **数値比較フィルタ**:
+  - より大きい: `?gt_<field>=<value>`
+    例: `GET /json/posts?gt_views=100`
+  - より小さい: `?lt_<field>=<value>`
+    例: `GET /json/posts?lt_views=100`
+  - 以上: `?gte_<field>=<value>`
+    例: `GET /json/posts?gte_views=100`
+  - 以下: `?lte_<field>=<value>`
+    例: `GET /json/posts?lte_views=100`
+  - 等しくない: `?ne_<field>=<value>`
+    例: `GET /json/posts?ne_views=100`
+  - いずれかに一致: `?in_<field>=<value1>,<value2>,...`
+    例: `GET /json/posts?in_views=100,200`
+
+### POSTリクエスト
+
+#### リソースの作成
+
+```
+POST /json/:resource
+```
+
+例: `POST /json/posts`
+
+リクエストボディ:
+```json
+{
+  "title": "New post",
+  "views": 0
+}
+```
+
+レスポンス (201 Created):
+```json
+{
+  "id": "3",
+  "uuid": "123e4567-e89b-12d3-a456-426614174000",
+  "title": "New post",
+  "views": 0
+}
+```
+
+### PUTリクエスト (予定)
+
+```
+PUT /json/:resource/:id
+```
+
+### DELETEリクエスト (予定)
+
+```
+DELETE /json/:resource/:id
+```
+
+## ステータスコード
+
+- **200 OK**: リクエスト成功
+- **201 Created**: リソース作成成功
+- **204 No Content**: リソース削除成功
+- **400 Bad Request**: リクエストが不正
+- **404 Not Found**: リソースが見つからない
+- **500 Internal Server Error**: サーバー内部エラー
+
+## 実装上の注意点
+
+- APIエンドポイントを実装する際は、適切なエラーハンドリングを行う
+- リクエストパラメータのバリデーションを実装する
+- レスポンスの型を明確に定義する
+- テストケースを作成してAPIの動作を検証する
+

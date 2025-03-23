@@ -4,26 +4,26 @@
 [![Build](https://github.com/yuyakinjo/next-json-server/actions/workflows/build.yml/badge.svg)](https://github.com/yuyakinjo/next-json-server/actions/workflows/build.yml)
 [![Lint](https://github.com/yuyakinjo/next-json-server/actions/workflows/lint.yml/badge.svg)](https://github.com/yuyakinjo/next-json-server/actions/workflows/lint.yml)
 
-Next.js App Router ベースの軽量な JSON Server 実装です。[json-server](https://github.com/typicode/json-server)にインスパイアされており、シンプルな RESTful API を JSON file ベースで提供します。
+A lightweight JSON Server implementation based on Next.js App Router. Inspired by [json-server](https://github.com/typicode/json-server), it provides a simple RESTful API based on JSON files.
 
-## 特徴
+## Features
 
-- 💡 Next.js App Router 対応
-- 🚀 シンプルなセットアップ
-- 📝 JSON file ベースのデータ管理
-- 🔄 完全な RESTful API サポート
-- 🛠 カスタマイズ可能なエンドポイント
+- 💡 Next.js App Router support
+- 🚀 Simple setup
+- 📝 JSON file based data management
+- 🔄 RESTful API support
+- 🛠 Customizable endpoints
 
-## 始め方
+## Getting Started
 
-1. パッケージをインストール
+1. Install the package
 
 ```bash
 bun -v # or npm, yarn, pnpm
 bun i
 ```
 
-2. プロジェクトのルートに`db.json`を作成
+2. Create a `db.json` in your project root
 
 ```json
 {
@@ -39,50 +39,64 @@ bun i
 }
 ```
 
-3. サーバーを起動
+3. Start the server
 
 ```bash
 bun dev
 ```
 
-## API エンドポイント
+## API Endpoints
 
-以下の RESTful API エンドポイントが利用可能です：
+The following RESTful API endpoints are available:
 
-### リソースの取得
+### Retrieving Resources
 
-- `GET /json/posts` - 全ての投稿を取得
-- `GET /json/posts/1` - ID:1 の投稿を取得
-- `GET /json/comments` - 全てのコメントを取得
-- `GET /json/users` - 全てのユーザーを取得
+#### Navigate by path
 
-### リソースの作成
+- `GET /json/posts` - Get all posts
+- `GET /json/posts/1` - Get post with ID:1
+- `GET /json/posts/1/comments` - Get comments for post with ID:1
+- `GET /json/posts/1/comments/1` - Get comment with ID:1 for post with ID:1
 
-- `POST /json/posts` - 新しい投稿を作成
+#### Using queries
+
+- `GET /json/posts?id=1` - Get post with ID:1
+- `GET /json/posts?id=1&id=2` - Get posts with ID:1 and ID:2
+- `GET /json/posts?title=starwars` - Get posts with title "starwars"
+- `GET /json/posts?gt_views=100` - Get posts with views greater than 100
+- `GET /json/posts?lt_views=100` - Get posts with views less than 100
+- `GET /json/posts?gte_views=100` - Get posts with views greater than or equal to 100
+- `GET /json/posts?lte_views=100` - Get posts with views less than or equal to 100
+- `GET /json/posts?ne_views=100` - Get posts with views not equal to 100
+- `GET /json/posts?in_views=100,200` - Get posts with views equal to 100 or 200
+
+### Creating Resources
+
+- `POST /json/posts` - Create a new post
 
 ```json
 {
-  "title": "新しい投稿",
+  "title": "New post",
   "views": 0
 }
 ```
 
-### リソースの更新
+### Updating Resources
 
-- `PUT /json/posts/1` - ID:1 の投稿を更新
+- `PUT /json/posts/1` - Update post with ID:1
 
 ```json
 {
-  "title": "更新された投稿",
+  "title": "Updated post",
   "views": 150
 }
 ```
 
-### リソースの削除
+### Deleting Resources
 
-- `DELETE /json/posts/1` - ID:1 の投稿を削除
+- `DELETE /json/posts/1` - Delete post with ID:1
 
-## レスポンス例
+## Response Examples
 
 ### GET /json/posts
 
@@ -101,42 +115,42 @@ bun dev
 ]
 ```
 
-### ステータスコード
+### Status Codes
 
-- `200` - リクエスト成功
-- `201` - リソース作成成功
-- `204` - リソース削除成功
-- `404` - リソースが見つからない
+- `200` - Request successful
+- `201` - Resource created successfully
+- `204` - Resource deleted successfully
+- `404` - Resource not found
 
-## 開発環境での使用
+## Usage in Development Environment
 
-1. リポジトリをクローン
+1. Clone the repository
 
 ```bash
 git clone https://github.com/yuyakinjo/next-json-server.git
 ```
 
-2. 依存関係をインストール
+2. Install dependencies
 
 ```bash
 cd next-json-server
 bun install
 ```
 
-3. 開発サーバーを起動
+3. Start the development server
 
 ```bash
 bun dev
 ```
 
-## Docker での実行
+## Running with Docker
 
-Docker を使用して実行することも可能です：
+You can also run it using Docker:
 
 ```bash
 docker compose up -d
 ```
 
-## ライセンス
+## License
 
-MIT ライセンスの下で公開されています。詳細については[LICENSE](LICENSE)を参照してください。
+Released under the MIT License. See [LICENSE](LICENSE) for details.

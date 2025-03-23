@@ -1,0 +1,148 @@
+---
+description: 
+globs: 
+alwaysApply: false
+---
+---
+description: デプロイメントとCI/CDパイプライン
+globs: "Dockerfile,compose.yml,.github/workflows/*.yml"
+alwaysApply: false
+---
+
+# デプロイメントガイド
+
+## 開発環境
+
+### ローカル開発
+
+ローカル環境で開発する場合は、以下のコマンドを使用します：
+
+```bash
+# 依存関係のインストール
+bun install
+
+# 開発サーバーの起動
+bun dev
+```
+
+開発サーバーは`http://localhost:3000`で実行されます。
+
+### Docker開発環境
+
+Docker Composeを使用して開発環境を構築することもできます：
+
+```bash
+# コンテナを起動
+docker compose up -d
+
+# ログの確認
+docker compose logs -f
+```
+
+こちらも`http://localhost:3000`でアクセス可能です。
+
+## テスト実行
+
+### ローカルでのテスト
+
+```bash
+bun test
+```
+
+### Dockerでのテスト
+
+```bash
+docker compose --profile test up --abort-on-container-exit --exit-code-from test
+```
+
+## ビルドプロセス
+
+本番用ビルドを作成するには：
+
+```bash
+# ビルド実行
+bun run build
+```
+
+これにより、`.next`ディレクトリに最適化されたビルドが生成されます。
+
+## CI/CDパイプライン
+
+このプロジェクトでは、GitHub Actionsを使用してCI/CDパイプラインを実装しています。
+
+### ワークフロー
+
+1. **Lint**: コードの品質チェック
+   - `.github/workflows/lint.yml`
+   - Biomeを使用したコードリンティング
+
+2. **Test**: 自動テスト実行
+   - `.github/workflows/test.yml`
+   - Dockerコンテナ内でテストを実行
+
+3. **Build**: ビルド検証
+   - `.github/workflows/build.yml`
+   - アプリケーションをビルドして問題がないか確認
+
+### プルリクエストプロセス
+
+1. 新しいブランチで開発作業を行う
+2. プルリクエストを作成する
+3. CI自動テストが実行される
+4. レビュー後、問題がなければマージする
+
+## コンテナ構成
+
+### Dockerファイル設計
+
+このプロジェクトのDockerfileは、複数のステージを使用したマルチステージビルドを採用しています：
+
+1. **base**: 基本イメージ (Bun)
+2. **deps**: 依存関係のインストール
+3. **dev**: 開発環境
+4. **test**: テスト環境
+
+### 環境変数
+
+- `ENV=docker`: Docker環境下でのテスト実行時に設定
+
+### ヘルスチェック
+
+コンテナには自動ヘルスチェックが設定されています：
+
+```
+HEALTHCHECK --interval=3s --timeout=3s --start-period=5s --retries=10 CMD curl -f http://localhost:3000/health || exit 1
+```
+
+## 本番デプロイ
+
+### 必要な環境設定
+
+- Node.js 18.0.0以上
+- 必要に応じて環境変数の設定
+
+### デプロイ手順
+
+1. コードをビルド: `bun run build`
+2. アプリケーションを起動: `bun run start`
+
+### コンテナデプロイ
+
+本番環境へのコンテナデプロイ：
+
+```bash
+# 本番用にDockerイメージをビルド
+docker build -t next-json-server:prod .
+
+# コンテナ起動
+docker run -p 3000:3000 next-json-server:prod
+```
+
+## ベストプラクティス
+
+1. デプロイ前には必ずテストを実行する
+2. リリース前にセキュリティ検証を行う
+3. デプロイ後も動作確認を行い、問題がないことを確認する
+4. 環境変数や機密情報を適切に管理する
+5. 継続的なモニタリングとログの確認を行う
+

@@ -1,0 +1,136 @@
+---
+description: 
+globs: 
+alwaysApply: false
+---
+---
+description: テスト方針とベストプラクティス
+globs: "tests/**/*.ts"
+alwaysApply: false
+---
+
+# テスト方針とガイドライン
+
+## テストフレームワーク
+
+このプロジェクトでは、**Vitest**をテストフレームワークとして使用しています。Vitestは高速で、TypeScriptとの互換性が高いテストランナーです。
+
+## テストの実行方法
+
+テストを実行するには、以下のコマンドを使用します:
+
+```bash
+bun test
+```
+
+または、package.jsonに定義されているスクリプトを使用:
+
+```bash
+bun run test
+```
+
+## テストファイルの構成
+
+テストファイルは以下のディレクトリ構造に従って配置します：
+
+```
+/tests
+  ├── get.test.ts   # GETリクエストのテスト
+  ├── post.test.ts  # POSTリクエストのテスト
+  └── ...           # その他のHTTPメソッドのテスト
+```
+
+新しいAPIエンドポイントを作成した場合は、対応するテストファイルも作成してください。
+
+## テストの書き方
+
+### 基本構造
+
+```typescript
+import { describe, expect, it } from "vitest";
+
+// 必要な型定義
+type ExampleType = {
+  id: string;
+  name: string;
+};
+
+// ヘルパー関数（必要に応じて）
+async function getJsonResponse<T>(url: string): Promise<T> {
+  const response = await fetch(url);
+  return response.json();
+}
+
+// テストスイート
+describe("機能名 Tests", () => {
+  // 環境設定（ベースURLなど）
+  const baseUrl = process.env.ENV === "docker" ? "http://web:3000" : "http://localhost:3000";
+
+  // 個別のテストケース
+  it("should ～期待される動作～", async () => {
+    // テストコード
+    const data = await getJsonResponse<ExampleType[]>(`${baseUrl}/path`);
+    
+    // アサーション
+    expect(data.length).toBeGreaterThan(0);
+  });
+  
+  // 他のテストケース...
+});
+```
+
+### テスト命名規則
+
+テスト関数名は「should～」で始め、何をテストするかを明確に示します：
+
+- `should return a list of posts`
+- `should return a single post when ID is provided`
+- `should return 404 when resource not found`
+
+### テストカバレッジ
+
+以下の観点でテストを作成します：
+
+1. **正常系テスト**: 想定通りの入力に対して正しい結果が返ることを確認
+2. **異常系テスト**: エラーケースが適切に処理されることを確認
+3. **エッジケース**: 境界値や特殊なケースでの動作を確認
+
+## アサーション
+
+Vitestの`expect`を使用して、結果を検証します：
+
+```typescript
+// 値の比較
+expect(result).toBe(expectedValue);
+expect(result).toEqual(expectedObject);
+
+// 配列の検証
+expect(data.length).toBeGreaterThan(0);
+expect(Array.isArray(data)).toBe(true);
+
+// オブジェクトのプロパティ検証
+expect(data).toHaveProperty('id');
+expect(data.id).toBe('1');
+
+// HTTP応答のステータス検証
+expect(response.status).toBe(200);
+```
+
+## route.tsファイルと自動テスト実行
+
+新しい`route.ts`ファイルを作成または変更した場合は、必ずテストを実行してAPI機能の正常動作を確認してください。これはCIパイプラインでも自動的に行われますが、ローカル開発時にも実施することを推奨します。
+
+## テスト環境
+
+テストは以下の環境で実行できます：
+
+1. **ローカル環境**: `localhost:3000`
+2. **Docker環境**: `web:3000`（`process.env.ENV === "docker"`で判別）
+
+## ベストプラクティス
+
+1. テストは独立して実行できるようにする（他のテストに依存しない）
+2. テストコードも本番コードと同様に整理し、メンテナンス可能にする
+3. 共通のユーティリティ関数を活用して重複を避ける
+4. 型定義を適切に使用し、テストでも型安全性を確保する
+5. 必要に応じてモックやスタブを使用する

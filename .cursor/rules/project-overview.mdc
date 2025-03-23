@@ -1,0 +1,71 @@
+---
+description: 
+globs: 
+alwaysApply: false
+---
+---
+description: プロジェクト概要と構造
+globs: "**/*.{ts,tsx}"
+alwaysApply: true
+---
+
+# Next JSON Server - プロジェクト概要
+
+## 概要
+
+Next.js App Router ベースの軽量な JSON Server 実装です。[json-server](mdc:https:/github.com/typicode/json-server)にインスパイアされており、シンプルな RESTful API を JSON file ベースで提供します。
+
+## 主要機能
+
+- 💡 Next.js App Router によるAPI実装
+- 🚀 シンプルなセットアップと使用方法
+- 📝 JSON fileベースのデータ管理
+- 🔄 RESTful APIサポート（GET/POST/PUT/DELETEメソッド）
+- 🛠 カスタマイズ可能なエンドポイント
+- 🔍 高度なクエリフィルタリング機能
+
+## 技術スタック
+
+- **フレームワーク**: Next.js 15.x (App Router)
+- **言語**: TypeScript 5.x
+- **ランタイム**: Node.js (≥18.0.0)
+- **パッケージマネージャー**: Bun 1.2.4
+- **ユーティリティライブラリ**: Ramda
+- **UIライブラリ**: React 19.x
+- **テストフレームワーク**: Vitest 3.x
+- **リンター**: Biome 1.9.4
+- **スタイリング**: TailwindCSS 4.x
+
+## プロジェクト構造
+
+```
+/
+├── app/                   # Next.jsアプリケーションコード
+│   ├── json/              # JSON Server API実装
+│   │   └── [...api]/      # 動的ルーティング
+│   │       ├── route.ts   # APIエンドポイント実装
+│   │       └── internal.ts # 内部ユーティリティ
+│   ├── page.tsx           # メインページ
+│   └── layout.tsx         # アプリレイアウト
+├── tests/                 # テストファイル
+│   ├── get.test.ts        # GETリクエストのテスト
+│   └── post.test.ts       # POSTリクエストのテスト
+├── db.json                # データベースファイル
+└── package.json           # 依存関係と設定
+```
+
+## アーキテクチャ概要
+
+このアプリケーションは、Next.js App Routerの動的ルーティング機能を利用して、JSON fileベースのRESTful APIを提供します。`db.json`をデータソースとして使用し、標準的なCRUD操作をサポートします。
+
+主なAPIパス: `/json/:resource/:id?/:nested_resource?/:nested_id?`
+
+実装では、リクエストパスを解析してデータをフィルタリングし、適切なレスポンスを返す処理を行っています。また、様々なクエリパラメータを使用して高度なデータフィルタリングが可能です。
+
+## 開発ガイドライン
+
+- TypeScriptの型安全性を最大限に活用する
+- コードの可読性と保守性を重視する
+- テスト駆動開発を推奨（各APIエンドポイントのテストケースを作成）
+- コメント（JSDoc形式）で関数や重要なロジックを説明する
+
