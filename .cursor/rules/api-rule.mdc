@@ -6,5 +6,4 @@ alwaysApply: false
 
 # Your rule content
 
-- route.tsを変更した場合、testを実行してください
-- 使用しているpackageManagerはbunです
+- route.tsを新規作成・変更した場合、testを実行してください
