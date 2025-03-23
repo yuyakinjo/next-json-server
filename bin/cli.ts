@@ -1,15 +1,15 @@
 #!/usr/bin/env node
 
-const fs = require("node:fs");
-const path = require("node:path");
-const { execSync } = require("node:child_process");
+import { execSync } from "node:child_process";
+import * as fs from "node:fs";
+import * as path from "node:path";
 
-const args = process.argv.slice(2);
-const command = args[0];
-const subCommand = args[1];
+const args: string[] = process.argv.slice(2);
+const command: string | undefined = args[0];
+const subCommand: string | undefined = args[1];
 
 // コマンドの使用方法を表示する関数
-function showHelp() {
+function showHelp(): void {
   console.log(`
   Usage: next-json-server [command]
 
@@ -20,7 +20,7 @@ function showHelp() {
 }
 
 // ディレクトリを確認して、必要であれば作成する関数
-function ensureDirectoryExists(dirPath) {
+function ensureDirectoryExists(dirPath: string): void {
   if (!fs.existsSync(dirPath)) {
     fs.mkdirSync(dirPath, { recursive: true });
     console.log(`ディレクトリを作成しました: ${dirPath}`);
@@ -28,7 +28,7 @@ function ensureDirectoryExists(dirPath) {
 }
 
 // JSONルートを生成する関数
-function generateJsonRoute() {
+function generateJsonRoute(): void {
   const cwd = process.cwd();
   const targetDir = path.join(cwd, "app", "json", "[...api]");
 

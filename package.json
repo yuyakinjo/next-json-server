@@ -15,15 +15,17 @@
   },
   "homepage": "https://github.com/yuyakinjo/next-json-server#readme",
   "bin": {
-    "next-json-server": "./bin/cli.js"
+    "next-json-server": "./build-bin/cli.js"
   },
   "files": [
     "app",
     "public",
     "bin",
+    "build-bin",
     "templates",
     "next.config.ts",
     "package.json",
+    "tsconfig.cli.json",
     "README.md",
     "LICENSE"
   ],
@@ -33,7 +35,9 @@
     "start": "next start",
     "lint": "biome ci",
     "gen:json:route": "bun scripts/generate-folder.ts",
-    "test": "vitest run"
+    "test": "vitest run",
+    "build:cli": "tsc -p tsconfig.cli.json",
+    "prepublishOnly": "npm run build:cli"
   },
   "dependencies": {
     "next": "15.1.7",
