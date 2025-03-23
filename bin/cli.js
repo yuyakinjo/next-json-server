@@ -1,8 +1,8 @@
 #!/usr/bin/env node
 
-const fs = require("fs");
-const path = require("path");
-const { execSync } = require("child_process");
+const fs = require("node:fs");
+const path = require("node:path");
+const { execSync } = require("node:child_process");
 
 const args = process.argv.slice(2);
 const command = args[0];
@@ -50,7 +50,7 @@ function generateJsonRoute() {
     "utf-8",
   );
   fs.writeFileSync(path.join(targetDir, "internal.ts"), internalTsContent);
-  console.log(`生成しました: internal.ts`);
+  console.log("生成しました: internal.ts");
 
   // route.tsの生成
   const routeTsContent = fs.readFileSync(
@@ -58,7 +58,7 @@ function generateJsonRoute() {
     "utf-8",
   );
   fs.writeFileSync(path.join(targetDir, "route.ts"), routeTsContent);
-  console.log(`生成しました: route.ts`);
+  console.log("生成しました: route.ts");
 
   console.log("\n✅ JSONルートの生成が完了しました!");
   console.log("次のステップ:");
