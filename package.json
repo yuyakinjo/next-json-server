@@ -1,6 +1,6 @@
 {
   "name": "next-json-server",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "description": "Next.js App Router based lightweight JSON Server implementation",
   "keywords": ["json-server", "nextjs", "api", "mock", "rest"],
   "packageManager": "bun@1.2.5",
@@ -14,9 +14,14 @@
     "url": "https://github.com/yuyakinjo/next-json-server/issues"
   },
   "homepage": "https://github.com/yuyakinjo/next-json-server#readme",
+  "bin": {
+    "next-json-server": "./bin/cli.js"
+  },
   "files": [
     "app",
     "public",
+    "bin",
+    "templates",
     "next.config.ts",
     "package.json",
     "README.md",

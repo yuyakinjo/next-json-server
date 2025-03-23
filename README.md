@@ -16,11 +16,12 @@ A lightweight JSON Server implementation based on Next.js App Router. Inspired b
 
 ## Getting Started
 
+### Using npm package
+
 1. Install the package
 
 ```bash
-bun -v # or npm, yarn, pnpm
-bun i
+npm install next-json-server
 ```
 
 2. Create a `db.json` in your project root
@@ -39,7 +40,38 @@ bun i
 }
 ```
 
-3. Start the server
+3. Generate JSON API route
+
+```bash
+npx next-json-server generate json
+```
+
+This will create `/app/json/[...api]/internal.ts` and `/app/json/[...api]/route.ts` files in your project.
+
+4. Start your Next.js development server
+
+```bash
+npm run dev
+```
+
+5. Access your API at `http://localhost:3000/json/posts`
+
+### Clone and Run
+
+1. Clone the repository
+
+```bash
+git clone https://github.com/yuyakinjo/next-json-server.git
+```
+
+2. Install dependencies
+
+```bash
+cd next-json-server
+bun install
+```
+
+3. Start the development server
 
 ```bash
 bun dev
@@ -121,6 +153,11 @@ The following RESTful API endpoints are available:
 - `201` - Resource created successfully
 - `204` - Resource deleted successfully
 - `404` - Resource not found
+
+## CLI Commands
+
+- `npx next-json-server generate json` - Generate JSON API route files
+- `npx next-json-server help` - Show help message
 
 ## Usage in Development Environment
 
