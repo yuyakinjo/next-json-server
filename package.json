@@ -38,8 +38,9 @@
     "gen:json:route": "bunx next-json-server generate json",
     "watch:templates": "bun scripts/watch-templates.ts",
     "test": "vitest run",
+    "test:restore": "bun test && git restore db.json",
     "build:cli": "tsc -p tsconfig.cli.json",
-    "prepublishOnly": "npm run build:cli"
+    "prepublishOnly": "bun run build:cli"
   },
   "dependencies": {
     "next": "15.1.7",
