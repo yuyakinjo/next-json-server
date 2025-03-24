@@ -35,7 +35,7 @@
     "build": "next build",
     "start": "next start",
     "lint": "biome ci",
-    "gen:json:route": "bun scripts/generate-folder.ts",
+    "gen:json:route": "bunx next-json-server generate json",
     "watch:templates": "bun scripts/watch-templates.ts",
     "test": "vitest run",
     "build:cli": "tsc -p tsconfig.cli.json",
