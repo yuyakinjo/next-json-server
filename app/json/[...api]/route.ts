@@ -104,3 +104,129 @@ export async function POST(req: NextRequest) {
     );
   }
 }
+
+/**
+ * PUTリクエストを処理する関数
+ * 既存のリソースをdb.jsonで更新します
+ * @param req - Next.jsのリクエストオブジェクト
+ * @returns 更新されたリソースを含むレスポンス
+ */
+export async function PUT(req: NextRequest) {
+  try {
+    // リクエストボディを取得
+    const body = await req.json();
+    // db.jsonのパスを取得
+    const dbPath = path.join(process.cwd(), "db.json");
+    // db.jsonの内容を読み込む
+    const data = JSON.parse(fs.readFileSync(dbPath, "utf-8"));
+    // /json/pathを取得
+    const requestPath = new URL(req.url).pathname.replace(basePath, "");
+    // パスを分割
+    const pathArray = requestPath.split("/").filter(isNotEmpty);
+
+    // リソース名とIDを取得（例：posts, 1）
+    const resourceName = pathArray[0];
+    const itemId = pathArray[1];
+
+    // リソースまたはIDが存在しない場合は404エラーを返す
+    if (!resourceName || !data[resourceName]) {
+      return NextResponse.json(
+        { error: "リソースが見つかりません" },
+        { status: 404 },
+      );
+    }
+
+    // 更新対象のインデックスを検索
+    const itemIndex = data[resourceName].findIndex(
+      (item: { id: string }) => item.id === itemId,
+    );
+
+    // アイテムが見つからない場合は404エラーを返す
+    if (itemIndex === -1) {
+      return NextResponse.json(
+        { error: "アイテムが見つかりません" },
+        { status: 404 },
+      );
+    }
+
+    // 更新されたアイテムを作成（IDは保持）
+    const updatedItem = {
+      ...body,
+      id: itemId,
+    };
+
+    // データを更新
+    data[resourceName][itemIndex] = updatedItem;
+
+    // db.jsonに書き込む
+    fs.writeFileSync(dbPath, JSON.stringify(data, null, 2));
+
+    // 更新されたアイテムを返す
+    return NextResponse.json(updatedItem, { status: 200 });
+  } catch (error) {
+    console.error("PUTリクエストエラー:", error);
+    return NextResponse.json(
+      { error: "リクエスト処理中にエラーが発生しました" },
+      { status: 500 },
+    );
+  }
+}
+
+/**
+ * DELETEリクエストを処理する関数
+ * 既存のリソースをdb.jsonから削除します
+ * @param req - Next.jsのリクエストオブジェクト
+ * @returns 空のレスポンス（204 No Content）
+ */
+export async function DELETE(req: NextRequest) {
+  try {
+    // db.jsonのパスを取得
+    const dbPath = path.join(process.cwd(), "db.json");
+    // db.jsonの内容を読み込む
+    const data = JSON.parse(fs.readFileSync(dbPath, "utf-8"));
+    // /json/pathを取得
+    const requestPath = new URL(req.url).pathname.replace(basePath, "");
+    // パスを分割
+    const pathArray = requestPath.split("/").filter(isNotEmpty);
+
+    // リソース名とIDを取得（例：posts, 1）
+    const resourceName = pathArray[0];
+    const itemId = pathArray[1];
+
+    // リソースまたはIDが存在しない場合は404エラーを返す
+    if (!resourceName || !data[resourceName]) {
+      return NextResponse.json(
+        { error: "リソースが見つかりません" },
+        { status: 404 },
+      );
+    }
+
+    // 削除対象のインデックスを検索
+    const itemIndex = data[resourceName].findIndex(
+      (item: { id: string }) => item.id === itemId,
+    );
+
+    // アイテムが見つからない場合は404エラーを返す
+    if (itemIndex === -1) {
+      return NextResponse.json(
+        { error: "アイテムが見つかりません" },
+        { status: 404 },
+      );
+    }
+
+    // データから削除
+    data[resourceName].splice(itemIndex, 1);
+
+    // db.jsonに書き込む
+    fs.writeFileSync(dbPath, JSON.stringify(data, null, 2));
+
+    // 204 No Contentを返す（削除成功）
+    return new NextResponse(null, { status: 204 });
+  } catch (error) {
+    console.error("DELETEリクエストエラー:", error);
+    return NextResponse.json(
+      { error: "リクエスト処理中にエラーが発生しました" },
+      { status: 500 },
+    );
+  }
+}
