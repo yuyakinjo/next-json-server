@@ -31,10 +31,12 @@
   ],
   "scripts": {
     "dev": "next dev --turbopack",
+    "dev:watch": "bun run watch:templates & bun run dev",
     "build": "next build",
     "start": "next start",
     "lint": "biome ci",
     "gen:json:route": "bun scripts/generate-folder.ts",
+    "watch:templates": "bun scripts/watch-templates.ts",
     "test": "vitest run",
     "build:cli": "tsc -p tsconfig.cli.json",
     "prepublishOnly": "npm run build:cli"
