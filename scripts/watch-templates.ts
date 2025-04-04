@@ -4,34 +4,36 @@ import { spawn } from "node:child_process";
 import * as fs from "node:fs";
 import * as path from "node:path";
 
-// 最後の実行時刻を追跡する
+// Track the last execution time
 let lastRunTime = 0;
-const debounceTime = 300; // ミリ秒
+const debounceTime = 300; // milliseconds
 
-// 監視するディレクトリのパス
+// Path to the directory to watch
 const templatesDir = path.join(process.cwd(), "templates");
 
-// テンプレートディレクトリが存在するか確認
+// Check if template directory exists
 if (!fs.existsSync(templatesDir)) {
-  console.error("Error: templates ディレクトリが見つかりません。");
+  console.error("Error: templates directory not found.");
   process.exit(1);
 }
 
-console.log("templates ディレクトリの監視を開始しました...");
-console.log("ファイルが変更されると自動的に generate コマンドが実行されます。");
+console.log("Started watching templates directory...");
+console.log(
+  "The generate command will be executed automatically when files change.",
+);
 
-// ファイルシステムの変更を監視
+// Watch for filesystem changes
 fs.watch(templatesDir, { recursive: true }, (eventType, filename) => {
   const now = Date.now();
 
-  // デバウンス処理 - 短時間に複数の変更イベントが発生した場合に一度だけ実行
+  // Debounce processing - execute only once if multiple change events occur in a short time
   if (now - lastRunTime > debounceTime) {
     lastRunTime = now;
 
-    console.log(`変更を検出しました: ${filename}`);
-    console.log("next-json-server generate json コマンドを実行します...");
+    console.log(`Change detected: ${filename}`);
+    console.log("Running next-json-server generate json command...");
 
-    // next-json-server generate json コマンドを実行
+    // Execute next-json-server generate json command
     const generateProcess = spawn(
       "bunx",
       ["next-json-server", "generate", "json"],
@@ -43,17 +45,17 @@ fs.watch(templatesDir, { recursive: true }, (eventType, filename) => {
 
     generateProcess.on("close", (code) => {
       if (code === 0) {
-        console.log("generate コマンドが正常に完了しました。");
+        console.log("Generate command completed successfully.");
       } else {
-        console.error(`generate コマンドが終了コード ${code} で終了しました。`);
+        console.error(`Generate command exited with code ${code}.`);
       }
-      console.log("変更の監視を続けています...");
+      console.log("Continuing to watch for changes...");
     });
   }
 });
 
-// プロセス終了時のクリーンアップ
+// Cleanup on process exit
 process.on("SIGINT", () => {
-  console.log("\n監視を終了します。");
+  console.log("\nEnding watch process.");
   process.exit(0);
 });
