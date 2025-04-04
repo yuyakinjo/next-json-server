@@ -1,6 +1,6 @@
 {
   "name": "next-json-server",
-  "version": "0.1.2",
+  "version": "0.1.3",
   "description": "Next.js App Router based lightweight JSON Server implementation",
   "keywords": ["json-server", "nextjs", "api", "mock", "rest"],
   "packageManager": "bun@1.2.5",
