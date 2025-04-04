@@ -43,7 +43,7 @@
     "prepublishOnly": "bun run build:cli"
   },
   "dependencies": {
-    "next": "15.1.7",
+    "next": "^15.2.4",
     "ramda": "^0.30.1",
     "react": "19.1.0",
     "react-dom": "19.1.0"
@@ -57,8 +57,8 @@
     "@types/react-dom": "^19.0.3",
     "postcss": "^8",
     "tailwindcss": "^4.0.0",
-    "typescript": "^5.7.2",
-    "vitest": "^3.0.5"
+    "typescript": "^5.8.2",
+    "vitest": "^3.1.1"
   },
   "peerDependencies": {
     "next": ">=15.0.0",
