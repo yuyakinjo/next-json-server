@@ -57,7 +57,7 @@ export async function POST(req: NextRequest) {
     // パスを分割
     const pathArray = requestPath.split("/").filter(isNotEmpty);
     // リソース名を取得（例：posts）
-    const resourceName = pathArray[0];
+    const [resourceName] = pathArray;
 
     // リソースが存在しない場合は404エラーを返す
     if (!resourceName || !data[resourceName]) {
@@ -125,8 +125,7 @@ export async function PUT(req: NextRequest) {
     const pathArray = requestPath.split("/").filter(isNotEmpty);
 
     // リソース名とIDを取得（例：posts, 1）
-    const resourceName = pathArray[0];
-    const itemId = pathArray[1];
+    const [resourceName, itemId] = pathArray;
 
     // リソースまたはIDが存在しない場合は404エラーを返す
     if (!resourceName || !data[resourceName]) {
@@ -190,8 +189,7 @@ export async function DELETE(req: NextRequest) {
     const pathArray = requestPath.split("/").filter(isNotEmpty);
 
     // リソース名とIDを取得（例：posts, 1）
-    const resourceName = pathArray[0];
-    const itemId = pathArray[1];
+    const [resourceName, itemId] = pathArray;
 
     // リソースまたはIDが存在しない場合は404エラーを返す
     if (!resourceName || !data[resourceName]) {
