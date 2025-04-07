@@ -5,7 +5,17 @@ services:
       target: dev
     ports:
       - "3000:3000"
-    command: ["bun", "run", "dev"]
+    command:
+      [
+        "/bin/bash",
+        "-c",
+        "chmod +x ./scripts/init-db.sh && ./scripts/init-db.sh && bun run nodemon --watch app/api/db/postgres/schema --watch app/api/db/postgres/[...api] --watch db.json --ext ts,json --exec 'bun run db:migrate' & bun run dev",
+      ]
+    environment:
+      - DATABASE_URL=postgresql://postgres:postgres@postgres:5432/app_db
+    depends_on:
+      postgres:
+        condition: service_healthy
     develop:
       watch:
         - action: sync
@@ -14,6 +24,22 @@ services:
           ignore: [node_modules, .github]
         - action: rebuild
           path: package.json
+
+  postgres:
+    image: postgres:16-alpine
+    ports:
+      - "5432:5432"
+    environment:
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=postgres
+      - POSTGRES_DB=app_db
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U postgres"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
 
   test:
     build:
@@ -25,3 +51,7 @@ services:
     depends_on:
       web:
         condition: service_healthy
+
+volumes:
+  postgres_data:
+    driver: local

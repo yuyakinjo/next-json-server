@@ -17,8 +17,8 @@ RUN bun install --frozen-lockfile
 ################################################################################
 FROM base AS dev
 WORKDIR /app
-# Install curl for healthcheck
-RUN apt-get update && apt-get install -y curl
+# Install curl for healthcheck and postgresql-client for migration
+RUN apt-get update && apt-get install -y curl postgresql-client
 # Copy node_modules from deps stage
 COPY --from=deps /app/node_modules ./node_modules
 # Copy the rest of the application
