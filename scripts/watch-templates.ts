@@ -31,17 +31,13 @@ fs.watch(templatesDir, { recursive: true }, (eventType, filename) => {
     lastRunTime = now;
 
     console.log(`Change detected: ${filename}`);
-    console.log("Running next-json-server generate json command...");
+    console.log("Running next-json-server gen json command...");
 
-    // Execute next-json-server generate json command
-    const generateProcess = spawn(
-      "bunx",
-      ["next-json-server", "generate", "json"],
-      {
-        stdio: "inherit",
-        shell: true,
-      },
-    );
+    // Execute next-json-server gen json command
+    const generateProcess = spawn("bunx", ["next-json-server", "gen", "json"], {
+      stdio: "inherit",
+      shell: true,
+    });
 
     generateProcess.on("close", (code) => {
       if (code === 0) {

@@ -25,8 +25,8 @@ function showHelp(): void {
   Usage: next-json-server [command]
 
   Commands:
-    generate json      - JSONルートを生成します
-    generate db/pg     - PostgreSQLルートを生成します (DrizzleORM使用)
+    gen json      - JSONルートを生成します
+    gen db/pg     - PostgreSQLルートを生成します (DrizzleORM使用)
     version, -v, --v   - バージョン情報を表示します
     help               - このヘルプメッセージを表示します
   `);
@@ -143,9 +143,9 @@ export const posts = pgTable("posts", {
 }
 
 // メインロジック
-if (command === "generate" && subCommand === "json") {
+if (command === "gen" && subCommand === "json") {
   generateJsonRoute();
-} else if (command === "generate" && subCommand === "db/pg") {
+} else if (command === "gen" && subCommand === "db/pg") {
   generatePostgresRoute();
 } else if (command === "version" || command === "-v" || command === "--v") {
   showVersion();

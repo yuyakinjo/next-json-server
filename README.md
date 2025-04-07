@@ -44,7 +44,7 @@ npm install next-json-server
 3. Generate JSON API route
 
 ```bash
-npx next-json-server generate json
+npx next-json-server gen json
 ```
 
 This will create `/app/json/[...api]/internal.ts` and `/app/json/[...api]/route.ts` files in your project.
@@ -62,7 +62,7 @@ npm run dev
 1. Generate PostgreSQL API route
 
 ```bash
-npx next-json-server generate db/pg
+npx next-json-server gen db/pg
 ```
 
 This will create the following files:
@@ -231,8 +231,8 @@ The following RESTful API endpoints are available when using the PostgreSQL inte
 
 ## CLI Commands
 
-- `npx next-json-server generate json` - Generate JSON API route files
-- `npx next-json-server generate db/pg` - Generate PostgreSQL API route files (with Drizzle ORM)
+- `npx next-json-server gen json` - Generate JSON API route files
+- `npx next-json-server gen db/pg` - Generate PostgreSQL API route files (with Drizzle ORM)
 - `npx next-json-server help` - Show help message
 
 ## Usage in Development Environment
