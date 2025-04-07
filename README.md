@@ -13,6 +13,7 @@ A lightweight JSON Server implementation based on Next.js App Router. Inspired b
 - 📝 JSON file based data management
 - 🔄 RESTful API support
 - 🛠 Customizable endpoints
+- 🛢️ PostgreSQL support with Drizzle ORM
 
 ## Getting Started
 
@@ -55,6 +56,37 @@ npm run dev
 ```
 
 5. Access your API at `http://localhost:3000/json/posts`
+
+### Using with PostgreSQL (Drizzle ORM)
+
+1. Generate PostgreSQL API route
+
+```bash
+npx next-json-server generate db/pg
+```
+
+This will create the following files:
+- `/app/db/pg/[...api]/internal.ts` - Internal utility functions
+- `/app/db/pg/[...api]/route.ts` - API route handler
+- `/app/db/pg/schema/index.ts` - Sample Drizzle schema file
+
+2. Configure your PostgreSQL connection in `.env.local`
+
+```
+DATABASE_URL=postgresql://user:password@localhost:5432/dbname
+```
+
+3. Customize your schema in `/app/db/pg/schema/index.ts` as needed
+
+4. Start your Next.js development server
+
+```bash
+npm run dev
+```
+
+5. The server will automatically run migrations and seed data on startup
+
+6. Access your API at `http://localhost:3000/db/pg/users` (or any other table name defined in your schema)
 
 ### Clone and Run
 
@@ -128,6 +160,49 @@ The following RESTful API endpoints are available:
 
 - `DELETE /json/posts/1` - Delete post with ID:1
 
+## PostgreSQL API Endpoints
+
+The following RESTful API endpoints are available when using the PostgreSQL integration:
+
+### Retrieving Resources
+
+- `GET /db/pg/users` - Get all users
+- `GET /db/pg/users/1` - Get user with ID:1
+- `GET /db/pg/posts` - Get all posts
+- `GET /db/pg/posts/1` - Get post with ID:1
+
+### Creating Resources
+
+- `POST /db/pg/users` - Create a new user
+
+```json
+{
+  "name": "New User",
+  "email": "user@example.com"
+}
+```
+
+### Updating Resources
+
+- `PUT /db/pg/users/1` - Update user with ID:1
+
+```json
+{
+  "name": "Updated User",
+  "email": "updated@example.com"
+}
+```
+
+### Deleting Resources
+
+- `DELETE /db/pg/users/1` - Delete user with ID:1
+
+### Filtering and Pagination
+
+- `GET /db/pg/users?limit=10&offset=0` - Paginate users
+- `GET /db/pg/users?name=John` - Filter users by name
+- `GET /db/pg/posts?authorId=1` - Get posts with authorId:1
+
 ## Response Examples
 
 ### GET /json/posts
@@ -157,6 +232,7 @@ The following RESTful API endpoints are available:
 ## CLI Commands
 
 - `npx next-json-server generate json` - Generate JSON API route files
+- `npx next-json-server generate db/pg` - Generate PostgreSQL API route files (with Drizzle ORM)
 - `npx next-json-server help` - Show help message
 
 ## Usage in Development Environment
