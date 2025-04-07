@@ -1,9 +1,7 @@
-import { eq } from "drizzle-orm";
-import { integer, pgTable, serial, text, timestamp } from "drizzle-orm/pg-core";
-import type { PostgresJsDatabase } from "drizzle-orm/postgres-js";
+import { pgTable, serial, text, integer, real, boolean, timestamp, jsonb, json } from "drizzle-orm/pg-core";
 
 // このファイルはdb.jsonから自動生成されました
-// 生成日時: 2025-04-07T01:26:20.362Z
+// 生成日時: 2025-04-07T01:39:30.440Z
 
 export const posts = pgTable("posts", {
   id: serial("id").primaryKey(),
@@ -37,9 +35,8 @@ export const users = pgTable("users", {
 });
 
 // リレーション関数
-export const getposts_comments = (db: PostgresJsDatabase, postsId: number) => {
-  return db
-    .select()
-    .from(posts_comments)
-    .where(eq(posts_comments.postsId, postsId));
+import { eq } from 'drizzle-orm';
+
+export const getposts_comments = (db, postsId) => {
+  return db.select().from(posts_comments).where(eq(posts_comments.postsId, postsId));
 };

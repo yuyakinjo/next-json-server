@@ -22,12 +22,16 @@ echo "PostgreSQLが起動しました！"
 echo "db.jsonからスキーマを生成しています..."
 bun scripts/generate-schema-from-json.ts
 
-# drizzle-kitコマンドを直接実行してマイグレーション
+# drizzle-kitコマンドを直接実行してマイグレーション (alterモードを指定)
 echo "マイグレーションスキーマを生成しています..."
-bunx drizzle-kit generate
+bunx drizzle-kit generate:pg --mode=alter
 
 # マイグレーションを実行
 echo "マイグレーションを実行しています..."
 bun app/api/db/postgres/migrate.ts
+
+# db.jsonからシードデータを挿入
+echo "db.jsonからデータをシードしています..."
+bun app/api/db/postgres/seed.ts
 
 echo "データベースの初期化が完了しました。"

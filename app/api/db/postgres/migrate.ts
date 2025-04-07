@@ -13,6 +13,21 @@ if (!connectionString) {
 // 指定時間待機する関数
 const sleep = (ms: number) => new Promise((resolve) => setTimeout(resolve, ms));
 
+// テーブルが既に存在するエラーかどうかをチェック
+function isTableExistsError(error: unknown): boolean {
+  if (typeof error === "object" && error !== null) {
+    // PostgresErrorの場合
+    if ("code" in error && error.code === "42P07") {
+      return true;
+    }
+    // エラーメッセージでチェック
+    if ("message" in error && typeof error.message === "string") {
+      return error.message.includes("already exists");
+    }
+  }
+  return false;
+}
+
 // マイグレーションの実行（リトライ機能付き）
 async function runMigration(retries = 5, delay = 2000) {
   // TypeScriptのエラーを回避するため、ここで再チェック
@@ -26,10 +41,22 @@ async function runMigration(retries = 5, delay = 2000) {
       const migrationClient = postgres(connectionString, { max: 1 });
       const db = drizzle(migrationClient);
 
-      // マイグレーションの実行
-      await migrate(db, { migrationsFolder: "drizzle" });
+      try {
+        // マイグレーションの実行
+        await migrate(db, { migrationsFolder: "drizzle" });
+        console.log("マイグレーションが完了しました");
+      } catch (migrationError) {
+        // テーブルが既に存在するエラーの場合はスキップ
+        if (isTableExistsError(migrationError)) {
+          console.log(
+            "テーブルは既に存在しています。マイグレーションをスキップします。",
+          );
+        } else {
+          // その他のエラーは再スロー
+          throw migrationError;
+        }
+      }
 
-      console.log("マイグレーションが完了しました");
       await migrationClient.end();
       return; // 成功したら関数を終了
     } catch (error) {
