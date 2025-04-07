@@ -12,7 +12,8 @@
   "workbench.editor.customLabels.patterns": {
     "**/app/**/page.tsx": "${dirname} - Page",
     "**/**/layout.tsx": "${dirname} - Layout",
-    "**/app/json/**/*.ts": "${dirname} - Dont edit this file"
+    "**/app/json/**/*.ts": "JSON API - Dont edit this file",
+    "**/app/db/pg/**/*.ts": "PG API - Dont edit this file"
   },
   "typescript.preferences.importModuleSpecifier": "non-relative"
 }
