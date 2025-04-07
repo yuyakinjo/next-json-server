@@ -1,17 +1,5 @@
 import { describe, expect, it } from "vitest";
 
-type Post = {
-  id: string;
-  title: string;
-  views: number;
-};
-
-// JSONレスポンスを取得するための関数
-async function getJsonResponse<T>(url: string): Promise<T> {
-  const response = await fetch(url);
-  return response.json();
-}
-
 describe("DELETE API Tests", () => {
   const baseUrl =
     process.env.ENV === "docker" ? "http://web:3000" : "http://localhost:3000";
