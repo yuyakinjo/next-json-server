@@ -59,6 +59,25 @@ services:
     depends_on:
       web:
         condition: service_healthy
+    environment:
+      - ENV=docker
+      - DATABASE_URL=postgresql://postgres:postgres@postgres:5432/app_db
+
+  test-pg:
+    build:
+      context: .
+      target: test
+    profiles:
+      - test
+    command: ["bun", "test:pg"]
+    depends_on:
+      web:
+        condition: service_healthy
+      postgres:
+        condition: service_healthy
+    environment:
+      - ENV=docker
+      - DATABASE_URL=postgresql://postgres:postgres@postgres:5432/app_db
 
 volumes:
   postgres_data:
