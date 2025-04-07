@@ -1,7 +1,7 @@
 import type { Config } from "drizzle-kit";
 
 export default {
-  schema: "./app/api/db/postgres/schema/index.ts",
+  schema: "./app/db/pg/schema/index.ts",
   out: "./drizzle",
   dialect: "postgresql",
   // alterモード設定

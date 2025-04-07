@@ -40,7 +40,7 @@ async function getJsonResponse<T>(url: string): Promise<T> {
 describe("PostgreSQL API Tests", () => {
   const baseUrl =
     process.env.ENV === "docker" ? "http://web:3000" : "http://localhost:3000";
-  const apiBase = `${baseUrl}/api/db/postgres`;
+  const apiBase = `${baseUrl}/db/pg`;
 
   it("GET List: should return a list of posts", async () => {
     const data = await getJsonResponse<Post[]>(`${apiBase}/posts`);

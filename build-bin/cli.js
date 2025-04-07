@@ -125,7 +125,7 @@ export const posts = pgTable("posts", {
     console.log("    DATABASE_URL=postgresql://user:password@localhost:5432/dbname");
     console.log("  2. schema/index.tsでテーブル定義をカスタマイズ");
     console.log("  3. `npm run dev` または `yarn dev` を実行してサーバーを起動");
-    console.log("  4. http://localhost:3000/api/db/postgres/{テーブル名} にアクセスしてAPIを使用");
+    console.log("  4. http://localhost:3000/db/pg/{テーブル名} にアクセスしてAPIを使用");
 }
 // メインロジック
 if (command === "generate" && subCommand === "json") {

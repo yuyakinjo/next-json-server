@@ -37,7 +37,7 @@ echo "$(date): マイグレーションスキーマ生成完了" >> /app/init-db
 
 # マイグレーションを実行
 echo "マイグレーションを実行しています..."
-bun app/api/db/postgres/migrate.ts
+bun app/db/pg/migrate.ts
 echo "$(date): マイグレーション実行完了" >> /app/init-db.log
 
 # データベース内のテーブルを確認
@@ -46,7 +46,7 @@ PGPASSFILE=~/.pgpass psql -h postgres -U postgres -d app_db -c "\dt" >> /app/ini
 
 # db.jsonからシードデータを挿入
 echo "db.jsonからデータをシードしています..."
-bun app/api/db/postgres/seed.ts
+bun app/db/pg/seed.ts
 echo "$(date): シード実行完了" >> /app/init-db.log
 
 # データ確認

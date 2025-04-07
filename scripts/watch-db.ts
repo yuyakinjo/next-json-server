@@ -44,11 +44,7 @@ function runMigration() {
   // マイグレーションスキーマ生成
   const generateProcess = spawn(
     "bunx",
-    [
-      "drizzle-kit",
-      "generate:pg",
-      "--schema=app/api/db/postgres/schema/index.ts",
-    ],
+    ["drizzle-kit", "generate:pg", "--schema=app/db/pg/schema/index.ts"],
     { stdio: "inherit" },
   );
 
@@ -61,7 +57,7 @@ function runMigration() {
     console.log("マイグレーションスキーマの生成が完了しました");
 
     // マイグレーション実行
-    const migrateProcess = spawn("bun", ["app/api/db/postgres/migrate.ts"], {
+    const migrateProcess = spawn("bun", ["app/db/pg/migrate.ts"], {
       stdio: "inherit",
     });
 

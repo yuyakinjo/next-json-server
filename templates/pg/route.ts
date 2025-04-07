@@ -9,11 +9,11 @@ import {
   updateRecord,
 } from "./internal";
 
-const basePath = "/api/db/postgres";
+const basePath = "/db/pg";
 
 export async function GET(req: NextRequest) {
   try {
-    // /api/db/postgres/pathを取得
+    // /db/pg/pathを取得
     const requestPath = new URL(req.url).pathname.replace(basePath, "");
     // パスを分割
     const pathArray = requestPath.split("/").filter(isNotEmpty);
@@ -69,7 +69,7 @@ export async function POST(req: NextRequest) {
   try {
     // リクエストボディを取得
     const body = await req.json();
-    // /api/db/postgres/pathを取得
+    // /db/pg/pathを取得
     const requestPath = new URL(req.url).pathname.replace(basePath, "");
     // パスを分割
     const pathArray = requestPath.split("/").filter(isNotEmpty);
@@ -102,7 +102,7 @@ export async function PUT(req: NextRequest) {
   try {
     // リクエストボディを取得
     const body = await req.json();
-    // /api/db/postgres/pathを取得
+    // /db/pg/pathを取得
     const requestPath = new URL(req.url).pathname.replace(basePath, "");
     // パスを分割
     const pathArray = requestPath.split("/").filter(isNotEmpty);
@@ -143,7 +143,7 @@ export async function PUT(req: NextRequest) {
 
 export async function DELETE(req: NextRequest) {
   try {
-    // /api/db/postgres/pathを取得
+    // /db/pg/pathを取得
     const requestPath = new URL(req.url).pathname.replace(basePath, "");
     // パスを分割
     const pathArray = requestPath.split("/").filter(isNotEmpty);
