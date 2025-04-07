@@ -18,8 +18,7 @@ export async function GET(req: NextRequest) {
     // パスを分割
     const pathArray = requestPath.split("/").filter(isNotEmpty);
     // テーブル名とIDを取得
-    const tableName = pathArray[0];
-    const id = pathArray[1];
+    const [tableName, id] = pathArray;
 
     // テーブル名がない場合は400エラーを返す
     if (!tableName) {
@@ -74,7 +73,7 @@ export async function POST(req: NextRequest) {
     // パスを分割
     const pathArray = requestPath.split("/").filter(isNotEmpty);
     // テーブル名を取得
-    const tableName = pathArray[0];
+    const [tableName] = pathArray;
 
     // テーブル名がない場合は400エラーを返す
     if (!tableName) {
@@ -107,8 +106,7 @@ export async function PUT(req: NextRequest) {
     // パスを分割
     const pathArray = requestPath.split("/").filter(isNotEmpty);
     // テーブル名とIDを取得
-    const tableName = pathArray[0];
-    const id = pathArray[1];
+    const [tableName, id] = pathArray;
 
     // テーブル名またはIDがない場合は400エラーを返す
     if (!tableName || !id) {
@@ -148,8 +146,7 @@ export async function DELETE(req: NextRequest) {
     // パスを分割
     const pathArray = requestPath.split("/").filter(isNotEmpty);
     // テーブル名とIDを取得
-    const tableName = pathArray[0];
-    const id = pathArray[1];
+    const [tableName, id] = pathArray;
 
     // テーブル名またはIDがない場合は400エラーを返す
     if (!tableName || !id) {
