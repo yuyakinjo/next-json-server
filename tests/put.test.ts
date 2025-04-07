@@ -18,10 +18,7 @@ function runTestsForPath(apiPath: string) {
         ? "http://web:3000"
         : "http://localhost:3000";
 
-    // PostgreSQL APIはまだ完全に実装されていないのでスキップ
-    const testFn = apiPath === "db/pg" ? it.skip : it;
-
-    testFn("PUT: should update an item", async () => {
+    it("PUT: should update an item", async () => {
       const updatedItem = { id: "1", title: "Updated Item", views: 100 };
       const body = JSON.stringify(updatedItem);
       const response = await fetch(`${baseUrl}/${apiPath}/posts/1`, {
