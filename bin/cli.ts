@@ -7,6 +7,18 @@ const args: string[] = process.argv.slice(2);
 const command: string | undefined = args[0];
 const subCommand: string | undefined = args[1];
 
+// パッケージのバージョンを取得する関数
+function getVersion(): string {
+  const packageJsonPath = path.join(__dirname, "../package.json");
+  const packageJson = JSON.parse(fs.readFileSync(packageJsonPath, "utf-8"));
+  return packageJson.version;
+}
+
+// バージョンを表示する関数
+function showVersion(): void {
+  console.log(`next-json-server version ${getVersion()}`);
+}
+
 // コマンドの使用方法を表示する関数
 function showHelp(): void {
   console.log(`
@@ -15,6 +27,7 @@ function showHelp(): void {
   Commands:
     generate json      - JSONルートを生成します
     generate db/pg     - PostgreSQLルートを生成します (DrizzleORM使用)
+    version, -v, --v   - バージョン情報を表示します
     help               - このヘルプメッセージを表示します
   `);
 }
@@ -134,6 +147,8 @@ if (command === "generate" && subCommand === "json") {
   generateJsonRoute();
 } else if (command === "generate" && subCommand === "db/pg") {
   generatePostgresRoute();
+} else if (command === "version" || command === "-v" || command === "--v") {
+  showVersion();
 } else if (command === "help" || !command) {
   showHelp();
 } else {
