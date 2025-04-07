@@ -1,17 +1,5 @@
 import { describe, expect, it } from "vitest";
 
-type Post = {
-  id: string;
-  title: string;
-  views: number;
-};
-
-// JSONレスポンスを取得するための関数
-async function getJsonResponse<T>(url: string): Promise<T> {
-  const response = await fetch(url);
-  return response.json();
-}
-
 // 両方のAPIパスでテストを実行するための関数
 function runTestsForPath(apiPath: string) {
   describe(`PUT API Tests for ${apiPath}`, () => {

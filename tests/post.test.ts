@@ -1,43 +1,14 @@
-import fs from "node:fs";
-import path from "node:path";
+import { execSync } from "node:child_process";
 import { beforeEach, describe, expect, test } from "vitest";
-
-// オリジナルのdb.jsonの内容
-const originalDb = {
-  posts: [
-    {
-      id: "1",
-      title: "harry potter",
-      views: 100,
-      comments: [
-        { id: "1", text: "a comment about post 1", postsId: "1" },
-        { id: "2", text: "another comment about post 1", postsId: "1" },
-      ],
-    },
-    {
-      id: "2",
-      title: "starwars",
-      views: 200,
-      comments: [{ id: "3", text: "a comment about post 2", postsId: "2" }],
-    },
-    {
-      id: "3",
-      title: "another title",
-      views: 300,
-      comments: [],
-    },
-  ],
-  comments: [
-    { id: "1", text: "a comment about post 1", postsId: "1" },
-    { id: "2", text: "another comment about post 1", postsId: "1" },
-  ],
-  users: [{ id: "1", name: "yuyakinjo" }],
-};
 
 // テスト前にdb.jsonをリセットする
 beforeEach(() => {
-  const dbPath = path.join(process.cwd(), "db.json");
-  fs.writeFileSync(dbPath, JSON.stringify(originalDb, null, 2));
+  try {
+    execSync("git restore db.json", { stdio: "pipe" });
+    console.log("db.json を git restore で元に戻しました");
+  } catch (error) {
+    console.error("git restore コマンドの実行中にエラーが発生しました:", error);
+  }
 });
 
 // 両方のAPIパスでテストを実行するための関数
