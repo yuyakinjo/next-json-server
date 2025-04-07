@@ -13,9 +13,9 @@ function showHelp(): void {
   Usage: next-json-server [command]
 
   Commands:
-    generate json         - JSONルートを生成します
-    generate db/postgres  - PostgreSQLルートを生成します (DrizzleORM使用)
-    help                  - このヘルプメッセージを表示します
+    generate json      - JSONルートを生成します
+    generate db/pg     - PostgreSQLルートを生成します (DrizzleORM使用)
+    help               - このヘルプメッセージを表示します
   `);
 }
 
@@ -71,8 +71,8 @@ function generateJsonRoute(): void {
 // PostgreSQLルートを生成する関数
 function generatePostgresRoute(): void {
   const cwd = process.cwd();
-  const targetDir = path.join(cwd, "app", "api", "db", "postgres", "[...api]");
-  const schemaDir = path.join(cwd, "app", "api", "db", "postgres", "schema");
+  const targetDir = path.join(cwd, "app", "db", "pg", "[...api]");
+  const schemaDir = path.join(cwd, "app", "db", "pg", "schema");
 
   // ディレクトリの確認と作成
   ensureDirectoryExists(targetDir);
@@ -132,7 +132,7 @@ export const posts = pgTable("posts", {
 // メインロジック
 if (command === "generate" && subCommand === "json") {
   generateJsonRoute();
-} else if (command === "generate" && subCommand === "db/postgres") {
+} else if (command === "generate" && subCommand === "db/pg") {
   generatePostgresRoute();
 } else if (command === "help" || !command) {
   showHelp();
