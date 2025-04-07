@@ -1,4 +1,9 @@
-import { describe, expect, it } from "vitest";
+import { beforeAll, describe, expect, it } from "vitest";
+
+// デバッグ情報
+console.log("テスト環境:", process.env.ENV);
+console.log("Node環境:", process.env.NODE_ENV);
+console.log("データベースURL:", process.env.DATABASE_URL);
 
 type Post = {
   id: number;

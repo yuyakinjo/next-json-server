@@ -32,6 +32,8 @@ HEALTHCHECK --interval=3s --timeout=3s --start-period=5s --retries=10 CMD curl -
 ################################################################################
 FROM base AS test
 WORKDIR /app
+# PostgreSQLクライアントとcurlをインストール
+RUN apt-get update && apt-get install -y curl postgresql-client
 # Copy node_modules from deps stage
 COPY --from=deps /app/node_modules ./node_modules
 # Copy the rest of the application

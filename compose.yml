@@ -55,13 +55,12 @@ services:
       target: test
     profiles:
       - test
-    command: ["bun", "test"]
+    command: ["bun", "run", "test"]
     depends_on:
       web:
         condition: service_healthy
     environment:
       - ENV=docker
-      - DATABASE_URL=postgresql://postgres:postgres@postgres:5432/app_db
 
   test-pg:
     build:
@@ -69,7 +68,9 @@ services:
       target: test
     profiles:
       - test
-    command: ["bun", "test:pg"]
+    command: ["bash", "-c", "chmod +x ./scripts/run-test.sh && ./scripts/run-test.sh"]
+    volumes:
+      - .:/app
     depends_on:
       web:
         condition: service_healthy

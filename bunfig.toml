@@ -1,0 +1,7 @@
+[test]
+# テスト設定
+preload = ["./setup-test.ts"]
+
+[test.env]
+ENV = "docker"
+NODE_ENV = "test"
