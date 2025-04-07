@@ -1,4 +1,4 @@
-import { beforeAll, describe, expect, it } from "vitest";
+import { describe, expect, it } from "vitest";
 
 // デバッグ情報
 console.log("テスト環境:", process.env.ENV);

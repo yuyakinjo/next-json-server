@@ -1,21 +1,12 @@
 #!/usr/bin/env bun
 
-import { spawn } from "node:child_process";
 import { readFileSync, writeFileSync } from "node:fs";
 import path from "node:path";
 
 // パスの設定
 const workDir = process.cwd();
 const dbJsonPath = path.join(workDir, "db.json");
-const schemaPath = path.join(
-  workDir,
-  "app",
-  "api",
-  "db",
-  "postgres",
-  "schema",
-  "index.ts",
-);
+const schemaPath = path.join(workDir, "app", "db", "pg", "schema", "index.ts");
 
 // データの型を推測する関数
 function inferType(value: unknown): { drizzleType: string; tsType: string } {

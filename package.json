@@ -42,6 +42,7 @@
     "watch:templates": "bun scripts/watch-templates.ts",
     "watch:db": "nodemon --watch app/db/pg/schema --watch app/db/pg/[...api] --watch db.json --ext ts,json --exec \"bun run db:migrate-seed\"",
     "test": "vitest run",
+    "test:type-check": "tsc --noEmit",
     "test:pg": "bun test tests/postgres.test.ts",
     "test:restore": "bun test && git restore db.json",
     "build:cli": "tsc -p tsconfig.cli.json",
