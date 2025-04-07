@@ -12,7 +12,7 @@
     "drizzle",
     "database"
   ],
-  "packageManager": "bun@1.2.5",
+  "packageManager": "bun@1.2.8",
   "author": "yuyakinjo",
   "license": "MIT",
   "repository": {
