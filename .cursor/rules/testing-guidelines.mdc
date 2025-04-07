@@ -1,11 +1,10 @@
 ---
 description: 
-globs: 
+globs: tests/**/*.ts
 alwaysApply: false
 ---
 ---
 description: テスト方針とベストプラクティス
-globs: "tests/**/*.ts"
 alwaysApply: false
 ---
 

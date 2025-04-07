@@ -1,11 +1,10 @@
 ---
 description: 
-globs: 
+globs: **/*.ts,**/*.tsx
 alwaysApply: false
 ---
 ---
 description: TypeScriptコーディング規約と命名規則
-globs: "**/*.{ts,tsx}"
 alwaysApply: true
 ---
 

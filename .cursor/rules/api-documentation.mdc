@@ -1,11 +1,10 @@
 ---
 description: 
-globs: 
+globs: app/json/**/*.ts
 alwaysApply: false
 ---
 ---
 description: API仕様とエンドポイントの詳細
-globs: "app/json/**/*.ts"
 alwaysApply: false
 ---
 
