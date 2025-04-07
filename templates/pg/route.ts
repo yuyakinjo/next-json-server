@@ -118,7 +118,7 @@ export async function POST(req: NextRequest) {
     // パスを分割
     const pathArray = requestPath.split("/").filter(isNotEmpty);
     // テーブル名を取得
-    const tableName = pathArray[0];
+    const [tableName] = pathArray;
 
     // テーブル名がない場合は400エラーを返す
     if (!tableName) {
